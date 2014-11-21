@@ -112,11 +112,13 @@ void Interact::getDecision(character* person) {
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
           wrefresh(result_win);
+          cin.get();
 	  bought = FALSE;
         } else if (choice == 4 && !bought) {
           mvwprintw(result_win,1,1, "Good luck winning without my help.           ");
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
+          cin.get();
           wrefresh(result_win);
         } 
       }
@@ -160,6 +162,7 @@ void Interact::getDecision(character* person) {
       player->money = player->money - 50;
       mvwprintw(result_win,3,1,"You gave your opponent $50 for losing."); 
       box(result_win,0,0);
+      cin.get();
       wrefresh(result_win);
     } else if (tugOfWarBar >= 6) {
       person->encounterDone++;
@@ -169,6 +172,7 @@ void Interact::getDecision(character* person) {
       player->money = player->money + reward;
       mvwprintw(result_win,3,1,"You won $%d.", reward); 
       box(result_win,0,0);
+      cin.get();
       wrefresh(result_win);
     }
     tugOfWarBar = 0;

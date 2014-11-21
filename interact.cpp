@@ -36,8 +36,6 @@ void Interact::getDecision(character* person) {
   noecho();
   cbreak();	/* Line buffering disabled. pass on everything */
   getmaxyx(stdscr, winheight, winwidth);
-  //startx = (winwidth - MENU_WIDTH);
-  //starty = (winheight - MENU_HEIGHT);
 
   startx = (winwidth * .25);
   starty = (winheight * .1);
@@ -53,8 +51,6 @@ void Interact::getDecision(character* person) {
   result_win = newwin(winheight - starty, winwidth - winwidth *.25, starty, startx);
 
   keypad(menu_win, TRUE);
-  //mvprintw(0, 0, "Use arrow keys to go up and down, Press enter to select a choice");
-  //refresh();
 
   print_results(result_win, person);
   //*************
@@ -108,22 +104,22 @@ void Interact::getDecision(character* person) {
       if (bought && choice != 4) {
 
       } else {
-        // Display message to user indicating exiting store
         if (bought) {
           mvwprintw(result_win,1,1, "Thanks for the money. I'll see you again.    ");
-		      mvwprintw(result_win,2,1, "                                             ");
-		      mvwprintw(result_win,3,1, "                                             ");
-		      wrefresh(result_win);
-		      cin.get();
-		    } else if (choice == 4 && !bought) {
+          mvwprintw(result_win,2,1, "                                             ");
+          mvwprintw(result_win,3,1, "                                             ");
+          wrefresh(result_win);
+          cin.get();
+	  bought = FALSE;
+        } else if (choice == 4 && !bought) {
           mvwprintw(result_win,1,1, "Good luck winning without my help.           ");
-		      mvwprintw(result_win,2,1, "                                             ");
-		      mvwprintw(result_win,3,1, "                                             ");
-		      wrefresh(result_win);
-		       cin.get();
-		      } /*else - this means they bought something and they selected exit*/
-	      }
-      }
+          mvwprintw(result_win,2,1, "                                             ");
+          mvwprintw(result_win,3,1, "                                             ");
+          wrefresh(result_win);
+          cin.get();
+      } 
+     }
+    }
     } else {
       while(tugOfWarBar > -6 && tugOfWarBar < 6) {
         print_menu(menu_win, highlight);
@@ -164,7 +160,9 @@ void Interact::getDecision(character* person) {
       mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!\n\n\n");
       wrefresh(result_win);
     }
-	cin.get();
+
+    tugOfWarBar = 0;
+    cin.get();
   }
 
 
@@ -177,17 +175,17 @@ void Interact::getDecision(character* person) {
 }
 
 int Interact::fightLogic(int userGrade, int winner, int enemyGrade) {
-  	int gradeCompare = userGrade - enemyGrade;
-	int difference = 2;
-    int result = 0;
-    if (winner == 0) { // draw
-        result = gradeCompare + 0;
-    } else if (winner == 1) { // player wins
-        result = gradeCompare + difference;
-    } else { // computer wins
-        result = gradeCompare - difference;
-    }
-	return result;
+  int gradeCompare = userGrade - enemyGrade;
+  int difference = 2;
+  int result = 0;
+  if (winner == 0) { // draw
+    result = gradeCompare + 0;
+  } else if (winner == 1) { // player wins
+    result = gradeCompare + difference;
+  } else { // computer wins
+    result = gradeCompare - difference;
+  }
+  return result;
 }
 
 void Interact::fight(WINDOW *result_win, character* enemy, int choice) {  
@@ -256,8 +254,6 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
   	  wrefresh(result_win);
 	  }
   }
-  // ************** 
-  //I don't understand the hard coded 6
   mvwprintw(result_win,4,1, "6 you win     -6 you lose = %d \n", tugOfWarBar);
   wrefresh(result_win);
 }

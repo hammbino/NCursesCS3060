@@ -158,12 +158,18 @@ void Interact::getDecision(character* person) {
         fight(result_win, person, choice);
     }
     if (tugOfWarBar <= -6) {
-      mvwprintw(result_win,1,1,"I'm the best! Go home!\n\n\n");
+      mvwprintw(result_win,1,1,"You have lost to %s\n\n", person->name.c_str());
+      player->money = player->money - 50;
+      mvwprintw(result_win,3,1,"You gave your opponent $50 for losing."); 
       box(result_win,0,0);
       wrefresh(result_win);
     } else if (tugOfWarBar >= 6) {
       person->encounterDone++;
-      mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!\n\n\n");
+      mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
+      int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
+      reward = reward * 35;
+      player->money = player->money + reward;
+      mvwprintw(result_win,3,1,"You won $%d.", reward); 
       box(result_win,0,0);
       wrefresh(result_win);
     }

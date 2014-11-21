@@ -59,7 +59,7 @@ void Interact::getDecision(character* person) {
   if (person->encounterDone > 0) {
     if (person->type == "Student") {
       // If an enemy, display beaten message
-      mvwprintw(result_win,1,1, "The student looks down in defeat.");
+      mvwprintw(result_win,1,1, "%s looks down in defeat.", person->name.c_str());
       wrefresh(result_win);
       cin.get();
       return;
@@ -112,14 +112,12 @@ void Interact::getDecision(character* person) {
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
           wrefresh(result_win);
-          cin.get();
 	  bought = FALSE;
         } else if (choice == 4 && !bought) {
           mvwprintw(result_win,1,1, "Good luck winning without my help.           ");
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
           wrefresh(result_win);
-          cin.get();
         } 
       }
     }

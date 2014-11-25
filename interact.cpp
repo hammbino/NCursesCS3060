@@ -5,6 +5,8 @@
 #include "Interact.h"
 
 void Interact::fight(character* player, character* enemy) {
+  // Do we need to store hit points?
+
   // Put weapons for player in an array.
 
   // Put weapns for enemy in an array.

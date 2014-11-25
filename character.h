@@ -1,21 +1,24 @@
 // Copyright Richard Larsen
 #include<string>
 #include<iostream>
-using namespace std;
 
 #pragma once
 
 class character {
 public:
-  int grade;
-  string type;
-  string name;
-  string rockName;
-  string paperName;
-  string scissorsName;
-
+  std::string type;
+  std::string name;
+  std::string rockName;
+  std::string paperName;
+  std::string scissorsName;
+  int rockGrade;
+  int paperGrade;
+  int scissorGrade;
+  int money;
+  int hitPoints;// Are we wanting to have the hit points calculated in fight by the grade?
+   
   character(void);
-  void characterP(int g, string t, string n, string r, string p, string s);
+  void characterP(std::string t, std::string n, std::string rn, std::string pn, std::string sn, int rg, int pg, int sg, int m, int hp);
   void populateCharacters();
   
 };
@@ -28,10 +31,10 @@ void character::populateCharacters() {
   character clint;
   character trevor;
 
-  wright.characterP(5,"Professor","Wright","Obsidian","Plywood","Hedge Trimmers");
-  steven.characterP(1,"Freshman","Slim Steven","Pebble","Recycled Paper","Safety Scissors");
-  fred.characterP(2,"Sophmore","Fred","Rock","Paper","Scissors");
-  scott.characterP(3,"Junior","Skinny Scott","Boulder","Cardboard","Cardboard Cutter");
-  clint.characterP(4,"Senior","Clint","Granite","Vinyl","Exact-o Knife");
-  trevor.characterP(6,"Vendor","TrafficingTrevor","Diamond","Steel Sheet","Steel Snips");
+  wright.characterP("Professor","Wright","Obsidian","Plywood","Hedge Trimmers", 5, 5, 5, 50000, 50);
+  steven.characterP("Freshman","Slim Steven","Pebble","Recycled Paper","Safety Scissors", 4, 4, 4, 40000, 40);
+  fred.characterP("Sophmore","Fred","Rock","Paper","Scissors", 3, 3, 3, 30000, 30);
+  scott.characterP("Junior","Skinny Scott","Boulder","Cardboard","Cardboard Cutter", 2, 2, 2, 20000, 20);
+  clint.characterP("Senior","Clint","Granite","Vinyl","Exact-o Knife", 1, 1, 1, 10000, 10);
+  trevor.characterP(6,"Vendor","TrafficingTrevor","Diamond","Steel Sheet","Steel Snips", 6, 6, 6, 60000, 60);
 }

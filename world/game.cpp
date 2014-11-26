@@ -24,7 +24,7 @@ int main(void) {
   init_pair(7, COLOR_BLACK, COLOR_MAGENTA);
 
   // create world and run it
-  World w;
+  World w("floor1");
   w.run(mainwin);
 
   // clean up and close

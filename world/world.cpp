@@ -111,7 +111,7 @@ int World::doFrame(WINDOW* win, int key) {
   // draw what we can see of the map
   int radx, rady;
   getmaxyx(win, rady, radx);
-  radx /= 6;
+  radx /= 10;
   rady /= 6;
   int left = max(this->playerX-radx, 0);
   int right = min(this->playerX+radx, this->cols-1);
@@ -119,27 +119,25 @@ int World::doFrame(WINDOW* win, int key) {
   int bottom = min(this->playerY+rady, this->rows-1);
   for (int r = top; r <= bottom; ++r) {
     for (int c = left; c <= right; ++c) {
-      int cx = (c - this->playerX + radx) * 3;
+      int cx = (c - this->playerX + radx) * 5;
       int cy = (r - this->playerY + rady) * 3;
       // the player
       if(r == this->playerY && c == this->playerX) {
         int color = (frame / 2)%6 + 2;
         wattron(win, COLOR_PAIR(color));
-        mvwaddstr(win, cy, cx, " o ");
-        mvwaddstr(win, cy + 1, cx,  "+|+");
-        mvwaddstr(win, cy + 2, cx,  "/ \\");
+        mvwaddstr(win, cy + 0, cx + 1,  " 0 ");
+        mvwaddstr(win, cy + 1, cx + 1,  "+|+");
+        mvwaddstr(win, cy + 2, cx + 1,  "/ \\");
       }
       // the tile
       else {
         wattron(win, COLOR_PAIR(1));
-        for(int x = 0; x < 3; ++x)
+        for(int x = 0; x < 5; ++x)
           for(int y = 0; y < 3; ++y)
             mvwaddch(win, cy + y, cx + x, tileAt(c, r));
       }
     }
   }
-
-  // draw the character's next frame
 
   // output everything to the screen
   wrefresh(win);

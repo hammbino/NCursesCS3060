@@ -14,6 +14,20 @@ char *choices[] = {
       "Exit",
       };
 
+int fightLogic(int userGrade, int winner, int enemyGrade) {
+  	int gradeCompare = userGrade - enemyGrade;
+	int difference = 2;
+    int result = 0;
+    if (winner == 0) { // draw
+        result = gradeCompare + 0;
+    } else if (winner == 1) { // player wins
+        result = gradeCompare + difference;
+    } else { // computer wins
+        result = gradeCompare - difference;
+    }
+	return result;
+}
+
 void Interact::fight(character* player, character* enemy) {
   // Do we need to store hit points?
 
@@ -26,7 +40,18 @@ void Interact::fight(character* player, character* enemy) {
   // Display enemy weapons
 
   // Begin while loop while player or enemy hit points do not equal zero
+  while(tugOfWarBar < -6 && tugOfWarBar > 6) {
+    int rock = 0;
+	int paper = 1;
+	int scissors = 2;
+	int p1, p2;
 
+	// players choose this uses the window
+
+	int winner = (p1 - p2 + 3) % 3;
+	tugOfWarBar += fightLogic(/*player->rockpaperscissorsgrade*/, winner, /*enemy->rockpaperscissorsgrade*/);
+    
+  }
   // Get users selection for weapon to use
 
   // Randomly generat which weapon the enemy will use

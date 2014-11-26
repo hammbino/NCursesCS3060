@@ -3,6 +3,16 @@
 // interact.cpp
 
 #include "Interact.h"
+#include <stdio.h>
+#include <ncurses.h>
+
+char *choices[] = { 
+      "Choice 1",
+      "Choice 2",
+      "Choice 3",
+      "Choice 4",
+      "Exit",
+      };
 
 void Interact::fight(character* player, character* enemy) {
   // Do we need to store hit points?
@@ -37,6 +47,58 @@ void Interact::fight(character* player, character* enemy) {
 }
 
 void Interact::buy(character* player, character* merchant) {
+
+WINDOW *menu_win;
+  int highlight = 1;
+  int choice = 0;
+  int c;
+
+  initscr();
+  clear();
+  noecho();
+  cbreak(); // Line buffering disabled. pass on everything 
+  startx = (80 - WIDTH) / 2;
+  starty = (24 - HEIGHT) / 2;
+    
+  menu_win = newwin(HEIGHT, WIDTH, starty, startx);
+  keypad(menu_win, TRUE);
+  mvprintw(0, 0, "Use arrow keys to go up and down, Press enter to select a choice");
+  refresh();
+  print_menu(menu_win, highlight);
+  while(1)
+  { c = wgetch(menu_win);
+    switch(c)
+    { case KEY_UP:
+        if(highlight == 1)
+          highlight = n_choices;
+        else
+          --highlight;
+        break;
+      case KEY_DOWN:
+        if(highlight == n_choices)
+          highlight = 1;
+        else 
+          ++highlight;
+        break;
+      case 10:
+        choice = highlight;
+        break;
+      default:
+        mvprintw(24, 0, "Charcter pressed is = %3d Hopefully it can be printed as '%c'", c, c);
+        refresh();
+        break;
+    }
+    print_menu(menu_win, highlight);
+    if(choice != 0) /* User did a choice come out of the infinite loop */
+      break;
+  } 
+  mvprintw(23, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
+  clrtoeol();
+  refresh();
+  endwin();
+  return 0;
+}
+
   // Put weapons for player in an array
 
   // Put weapons for merchant in an array
@@ -72,4 +134,35 @@ void Interact::buy(character* player, character* merchant) {
   // Display message to user indicating exiting store
 
   // return void
+}
+
+WINDOW *create_newwin(int height, int width, int starty, int startx) {
+  WINDOW *local_win;
+
+  local_win = newwin(height, width, starty, startx);
+  box(local_win, 0 , 0);   // 0, 0 y, x coordinates
+  wrefresh(local_win);
+
+  return local_win;
+
+}
+
+void print_menu(WINDOW *menu_win, int highlight)
+{
+  int x, y, i;  
+
+  x = 2;
+  y = 2;
+  box(menu_win, 0, 0);
+  for(i = 0; i < n_choices; ++i)
+  { if(highlight == i + 1) /* High light the present choice */
+    { wattron(menu_win, A_REVERSE); 
+      mvwprintw(menu_win, y, x, "%s", choices[i]);
+      wattroff(menu_win, A_REVERSE);
+    }
+    else
+      mvwprintw(menu_win, y, x, "%s", choices[i]);
+    ++y;
+  }
+  wrefresh(menu_win);
 }

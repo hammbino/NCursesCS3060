@@ -1,5 +1,7 @@
 // copyright 2014 nigel nelson
 
+#include <fstream>
+#include <string.h>
 #include <time.h>
 #include <math.h>
 #include "world.h"
@@ -20,6 +22,34 @@ World::World() {
   }
   this->playerX = 4;
   this->playerY = 4;
+}
+
+World::World(string filename) {
+  ifstream fs(filename.c_str());
+
+  if(!fs.good()) {
+    throw "failed to open world file.";
+  }
+
+  getline(fs, this->name);
+  fs >> this->cols;
+  fs.ignore(1);
+  fs >> this->rows;
+  fs.ignore(1);
+  this->playerX = 2;
+  this->playerY = 2;
+  this->tiles = new char[this->rows * this->cols];
+  for(int r = 0; r < rows; ++r) {
+    string line;
+    getline(fs, line);
+    strncpy(this->tiles + (r * this->cols), line.c_str(), this->cols);
+    int c;
+    if((c = line.find('p')) != string::npos) {
+      this->playerX = c;
+      this->playerY = r;
+      this->tiles[(r * this->cols) + c] = ' ';
+    }
+  }
 }
 
 char World::tileAt(int x, int y) {
@@ -89,8 +119,8 @@ int World::doFrame(WINDOW* win, int key) {
   int bottom = min(this->playerY+rady, this->rows-1);
   for (int r = top; r <= bottom; ++r) {
     for (int c = left; c <= right; ++c) {
-      int cx = (c - left) * 3;
-      int cy = (r - top) * 3;
+      int cx = (c - this->playerX + radx) * 3;
+      int cy = (r - this->playerY + rady) * 3;
       // the player
       if(r == this->playerY && c == this->playerX) {
         int color = (frame / 2)%6 + 2;

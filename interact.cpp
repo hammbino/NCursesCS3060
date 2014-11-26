@@ -29,7 +29,7 @@ int fightLogic(int userGrade, int winner, int enemyGrade) {
 }
 
 void Interact::fight(character* player, character* enemy) {
-  // Do we need to store hit points?
+  int tugOfWarBar = 0;
 
   // Put weapons for player in an array.
 

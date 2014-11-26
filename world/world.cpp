@@ -1,7 +1,9 @@
 // copyright 2014 nigel nelson
 
 #include <time.h>
+#include <math.h>
 #include "world.h"
+using namespace std;
 
 #define FRAME_NANOS (1000000000/33)
 
@@ -76,12 +78,38 @@ int World::doFrame(WINDOW* win, int key) {
   // clear screen
   wclear(win);
 
+  // draw what we can see of the map
+  int radx, rady;
+  getmaxyx(win, rady, radx);
+  radx /= 6;
+  rady /= 6;
+  int left = max(this->playerX-radx, 0);
+  int right = min(this->playerX+radx, this->cols-1);
+  int top = max(this->playerY-rady, 0);
+  int bottom = min(this->playerY+rady, this->rows-1);
+  for (int r = top; r <= bottom; ++r) {
+    for (int c = left; c <= right; ++c) {
+      int cx = (c - left) * 3;
+      int cy = (r - top) * 3;
+      // the player
+      if(r == this->playerY && c == this->playerX) {
+        int color = (frame / 2)%6 + 2;
+        wattron(win, COLOR_PAIR(color));
+        mvwaddstr(win, cy, cx, " o ");
+        mvwaddstr(win, cy + 1, cx,  "+|+");
+        mvwaddstr(win, cy + 2, cx,  "/ \\");
+      }
+      // the tile
+      else {
+        wattron(win, COLOR_PAIR(1));
+        for(int x = 0; x < 3; ++x)
+          for(int y = 0; y < 3; ++y)
+            mvwaddch(win, cy + y, cx + x, tileAt(c, r));
+      }
+    }
+  }
+
   // draw the character's next frame
-  int color = (frame / 2)%6 + 1;
-  wattron(win, COLOR_PAIR(color));
-  mvwaddstr(win, this->playerY, this->playerX, " o ");
-  mvwaddstr(win, this->playerY+1, this->playerX, "+|+");
-  mvwaddstr(win, this->playerY+2, this->playerX, "/ |");
 
   // output everything to the screen
   wrefresh(win);

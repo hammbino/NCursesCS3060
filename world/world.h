@@ -30,6 +30,7 @@ class World {
 
     World();
     World(string filename);
+    ~World();
     void run(WINDOW* window);
 
 };

@@ -64,6 +64,10 @@ World::World(string filename) {
   }
 }
 
+World::~World() {
+  delete[] this->tiles;
+}
+
 char World::tileAt(int x, int y) {
   return *(this->tiles + y * this->cols + x);
 }

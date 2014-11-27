@@ -2,7 +2,7 @@
 //
 // WORLD.H
 //
-// Describes the overworld the player will walk around in.
+// 
 
 #pragma once
 #include <string>
@@ -21,8 +21,13 @@ class World {
     int playerX, playerY;
     int doFrame(WINDOW* window, int key);
     char tileAt(int x, int y);
+    void drawTile(char tile, WINDOW* window, int x, int y, int frame);
 
   public:
+    static const char TILE_WALL = 'X';
+    static const char TILE_FLOOR = ' ';
+    static const char TILE_PLAYER = 'p';
+
     World();
     World(string filename);
     void run(WINDOW* window);

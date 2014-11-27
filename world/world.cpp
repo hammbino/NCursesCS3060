@@ -7,47 +7,59 @@
 #include "world.h"
 using namespace std;
 
-#define FRAME_NANOS (1000000000/33)
-
+// default world constructor
+//  creates an 8x8 closed-off room with the player inside.
 World::World() {
   this->name = "Default Room";
   this->rows = 8;
   this->cols = 8;
+  // allocate array for the tiles
   this->tiles = new char[this->rows * this->cols];
+  // initialize the array to be empty, surrounded by walls
   for (int r = 0; r < this->rows; ++r) {
     for (int c = 0; c < this->cols; ++c) {
+      // pointer to that tile
       char * t = tiles + r * this->cols + c;
-      *t = (r < 2 || r >= 6 || c < 2 || c >= 6) ? 'X' : ' ';
+      // set it to a wall if it's the edge,
+      // otherwise it's blank.
+      *t = (r < 2 || r >= 6 || c < 2 || c >= 6) ?
+        World::TILE_WALL: World::TILE_FLOOR;
     }
   }
+  // put the player in there somewhere
   this->playerX = 4;
   this->playerY = 4;
 }
 
+// parameterized world constructor
+//  loads data from a file to create a world.
 World::World(string filename) {
+  // open stream
   ifstream fs(filename.c_str());
-
-  if(!fs.good()) {
-    throw "failed to open world file.";
-  }
-
+  if(!fs.good()) throw "failed to open world file.";
+  // read in the name and size from first 3 lines
   getline(fs, this->name);
   fs >> this->cols;
   fs.ignore(1);
   fs >> this->rows;
   fs.ignore(1);
+  // default player position; should be set later
   this->playerX = 2;
   this->playerY = 2;
+  // allocate array for tiles
   this->tiles = new char[this->rows * this->cols];
+  // load in the rows, line by line
   for(int r = 0; r < rows; ++r) {
     string line;
     getline(fs, line);
     strncpy(this->tiles + (r * this->cols), line.c_str(), this->cols);
+    // see if the player's location was declared in this line
     int c;
-    if((c = line.find('p')) != string::npos) {
+    if((c = line.find(World::TILE_PLAYER)) != string::npos) {
       this->playerX = c;
       this->playerY = r;
-      this->tiles[(r * this->cols) + c] = ' ';
+      // there will just be a blank space where he started
+      this->tiles[(r * this->cols) + c] = World::TILE_FLOOR;
     }
   }
 }
@@ -60,7 +72,7 @@ void World::run(WINDOW* win) {
   // structs needed for sleeping
   struct timespec sleeptime, notused;
   sleeptime.tv_sec = 0;
-  sleeptime.tv_nsec = FRAME_NANOS;
+  sleeptime.tv_nsec = (1000000000/33);
 
   while (1) {
     // key
@@ -84,19 +96,19 @@ int World::doFrame(WINDOW* win, int key) {
   bool moved = true;
   if (key == 100) {
     // right
-    if(tileAt(this->playerX+1, this->playerY) == TILE_FLOOR)
+    if(tileAt(this->playerX+1, this->playerY) == World::TILE_FLOOR)
       ++this->playerX;
   } else if (key == 97) {
     // left
-    if(tileAt(this->playerX-1, this->playerY) == TILE_FLOOR)
+    if(tileAt(this->playerX-1, this->playerY) == World::TILE_FLOOR)
       --this->playerX;
   } else if (key == 115) {
     // down
-    if(tileAt(this->playerX, this->playerY+1) == TILE_FLOOR)
+    if(tileAt(this->playerX, this->playerY+1) == World::TILE_FLOOR)
       ++this->playerY;
   } else if (key == 119) {
     // up
-    if(tileAt(this->playerX, this->playerY-1) == TILE_FLOOR)
+    if(tileAt(this->playerX, this->playerY-1) == World::TILE_FLOOR)
       --this->playerY;
   } else {
     moved = false;
@@ -121,21 +133,10 @@ int World::doFrame(WINDOW* win, int key) {
     for (int c = left; c <= right; ++c) {
       int cx = (c - this->playerX + radx) * 5;
       int cy = (r - this->playerY + rady) * 3;
-      // the player
-      if(r == this->playerY && c == this->playerX) {
-        int color = (frame / 2)%6 + 2;
-        wattron(win, COLOR_PAIR(color));
-        mvwaddstr(win, cy + 0, cx + 1,  " 0 ");
-        mvwaddstr(win, cy + 1, cx + 1,  "+|+");
-        mvwaddstr(win, cy + 2, cx + 1,  "/ \\");
-      }
-      // the tile
-      else {
-        wattron(win, COLOR_PAIR(1));
-        for(int x = 0; x < 5; ++x)
-          for(int y = 0; y < 3; ++y)
-            mvwaddch(win, cy + y, cx + x, tileAt(c, r));
-      }
+      if(r == this->playerY && c == this->playerX)
+        drawTile(World::TILE_PLAYER, win, cx, cy, frame);
+      else
+        drawTile(this->tileAt(c, r), win, cx, cy, frame);
     }
   }
 
@@ -144,4 +145,36 @@ int World::doFrame(WINDOW* win, int key) {
 
   // return 1 to continue running
   return 1;
+}
+
+// draw a tile to the specified point on the screen
+//  the char represents what tile it is
+//  x and y are the top left coordinates of where to draw
+//  frame can be used to animate the tile
+void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
+  // the player
+  if (tile == World::TILE_PLAYER) {
+    int color = (frame / 2)%6 + 2;
+    wattron(win, COLOR_PAIR(color));
+    mvwaddstr(win, y + 0, x + 1,  " 0 ");
+    mvwaddstr(win, y + 1, x + 1,  "+|+");
+    mvwaddstr(win, y + 2, x + 1,  "/ \\");
+  }
+  // no floor
+  else if (tile == World::TILE_FLOOR) {
+  }
+  // nice brick wall
+  else if (tile == World::TILE_WALL) {
+    wattron(win, COLOR_PAIR(2));
+    mvwaddstr(win, y + 0, x, "|__|_");
+    mvwaddstr(win, y + 1, x, "_|__|");
+    mvwaddstr(win, y + 2, x, "|_|__");
+  }
+  // by default, just draw the character. basically, a shrug
+  else {
+    wattron(win, COLOR_PAIR(1));
+    for(int c = 0; c < 5; ++c)
+      for(int r = 0; r < 3; ++r)
+        mvwaddch(win, y + r, x + r, tile);
+  }
 }

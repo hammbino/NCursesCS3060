@@ -35,6 +35,8 @@ int main()
 	mvprintw(0, 0, "Use arrow keys to go up and down, Press enter to select a choice");
 	refresh();
 	print_menu(menu_win, highlight);
+	//char input;
+	//while (input == 'y') {
 	while(1)
 	{	c = wgetch(menu_win);
 		switch(c)
@@ -61,7 +63,20 @@ int main()
 		print_menu(menu_win, highlight);
 		if(choice != 0)	/* User did a choice come out of the infinite loop */
 			break;
-	}	
+	}
+	//int cost = ((vendor->rockGrade - 1) * 100); 
+	//if (player->money > cost) { // see if they have enough money
+		// subtract from the user's money the cost of the weapon
+		// Update the user's weapon to the one that has been bought
+	//} else { 
+		// Not enough money
+		// Print not enough money.
+		
+	//}
+	
+	//input = wgetch(menu_win);
+
+	//}	
 	mvprintw(23, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
 	clrtoeol();
 	refresh();

@@ -1,6 +1,4 @@
 #include<string>
-#include<iostream>
-#include<vector>
 using namespace std;
 
 #pragma once
@@ -16,7 +14,6 @@ public:
   string paperName;
   string scissorsName;
   int encounterDone;
-  vector<character*> people;
 
   character(void);
   character(int rg, int pg, int sg, string t, string n, string rn, string pn, string sn, int ed);

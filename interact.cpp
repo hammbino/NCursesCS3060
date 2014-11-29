@@ -3,16 +3,15 @@
 // interact.cpp
 
 #include "Interact.h"
+#include "character.h"
 #include <stdio.h>
 #include <ncurses.h>
 
-char *choices[] = { 
-      "Choice 1",
-      "Choice 2",
-      "Choice 3",
-      "Choice 4",
-      "Exit",
-      };
+#define WIDTH 30
+#define HEIGHT 10 
+
+int startx = 0;
+int starty = 0;
 
 int fightLogic(int userGrade, int winner, int enemyGrade) {
   	int gradeCompare = userGrade - enemyGrade;
@@ -47,6 +46,12 @@ void Interact::fight(character* player, character* enemy) {
 	int p1, p2;
 
 	// players choose this uses the window
+  string choices[] = {
+    string(player->rockName),
+    string(player->paperName),
+    string(player->scissorName),
+    String("Exti"), 
+  };
 
 	int winner = (p1 - p2 + 3) % 3;
 	tugOfWarBar += fightLogic(/*player->rockpaperscissorsgrade*/, winner, /*enemy->rockpaperscissorsgrade*/);
@@ -73,7 +78,16 @@ void Interact::fight(character* player, character* enemy) {
 
 void Interact::buy(character* player, character* merchant) {
 
-WINDOW *menu_win;
+  // Put weapons for player in an array
+
+  // Put weapons for merchant in an array
+
+  // Display the players weapons
+
+  // Dislpay the merchant's weapons
+  // Display question to user asking if they would like to buy anything
+  // Get user input
+  WINDOW *menu_win;
   int highlight = 1;
   int choice = 0;
   int c;
@@ -95,12 +109,12 @@ WINDOW *menu_win;
     switch(c)
     { case KEY_UP:
         if(highlight == 1)
-          highlight = n_choices;
+          highlight = choice;
         else
           --highlight;
         break;
       case KEY_DOWN:
-        if(highlight == n_choices)
+        if(highlight == choice
           highlight = 1;
         else 
           ++highlight;
@@ -117,24 +131,12 @@ WINDOW *menu_win;
     if(choice != 0) /* User did a choice come out of the infinite loop */
       break;
   } 
-  mvprintw(23, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);
+  mvprintw(23, 0, "You chose choice %d with choice string %s\n", choice, choices[choice - 1]);    
   clrtoeol();
   refresh();
   endwin();
-  return 0;
-}
-
-  // Put weapons for player in an array
-
-  // Put weapons for merchant in an array
-
-  // Display the players weapons
-
-  // Dislpay the merchant's weapons
-
-  // Display question to user asking if they would like to buy anything
-
-  // Get user input
+  //return 0;
+  }
 
   // Begin while loop while user input is y
 
@@ -172,14 +174,14 @@ WINDOW *create_newwin(int height, int width, int starty, int startx) {
 
 }
 
-void print_menu(WINDOW *menu_win, int highlight)
+void print_menu(WINDOW *menu_win, int highlight, string[] choices)
 {
   int x, y, i;  
 
   x = 2;
   y = 2;
   box(menu_win, 0, 0);
-  for(i = 0; i < n_choices; ++i)
+  for(i = 0; i < sizeof(choices); ++i)
   { if(highlight == i + 1) /* High light the present choice */
     { wattron(menu_win, A_REVERSE); 
       mvwprintw(menu_win, y, x, "%s", choices[i]);
@@ -190,4 +192,14 @@ void print_menu(WINDOW *menu_win, int highlight)
     ++y;
   }
   wrefresh(menu_win);
+}
+
+string[] populateMenu (character* character) {
+  string [] choices {
+    string(character->rockName),
+    string(character->paperName),
+    string(character->scissorName),
+    string("Exit")
+  }
+  return choices;
 }

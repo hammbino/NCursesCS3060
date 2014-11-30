@@ -73,6 +73,11 @@ char World::tileAt(int x, int y) {
 }
 
 void World::run(WINDOW* win) {
+  // create some HUD windows
+  WINDOW* hud = newwin(5, 20, 2, 2);
+  box(hud, 0, 0);
+  mvwaddstr(hud, 4, 4, "hi");
+
   // structs needed for sleeping
   struct timespec sleeptime, notused;
   sleeptime.tv_sec = 0;
@@ -84,6 +89,7 @@ void World::run(WINDOW* win) {
     int input = getch();
     // frame action
     int donext = this->doFrame(win, input);
+    wrefresh(hud);
     // do next frame?
     if (!donext) break;
     // wait

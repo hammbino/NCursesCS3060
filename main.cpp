@@ -8,7 +8,7 @@ int main(void) {
   WINDOW * mainwin;
 
   // initialize ncurses
-  if ( (mainwin = initscr()) == NULL ) {
+  if ((mainwin = initscr()) == NULL ) {
     fprintf(stderr, "Error initialising ncurses.\n");
     exit(EXIT_FAILURE);
   }

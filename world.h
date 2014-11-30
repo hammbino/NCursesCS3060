@@ -24,10 +24,22 @@ class World {
     char * tiles;
     // location of the player on the map (top-left based)
     int playerX, playerY;
+
+    // execute a single frame of the game. called by run().
+    //  will take input for the user and update the player's location.
+    //  will also spawn other interaction windows if the player talks to an
+    //    NPC character.
+    //  returns 1 if it should continue running, 0 if it is done
+    int act(int key);
+    // draw the world in its current state. called by run().
+    //  will draw as many tiles as possible in the given window.
+    void drawWorld(WINDOW* window);
+    // draw the HUD at the top of the screen. called by run().
+    //  will draw into the window specified.
+    void drawHUD(WINDOW* window);
     // execute a single frame of the game. called by run() repeatedly.
     //  will take in input from the user, update the player's position,
     //  and redraw the screen to the given window.
-    //  returns 1 if it should continue running, 0 if it is done
     int doFrame(WINDOW* window, int key);
     // get the char representing the tile at that point on the map
     char tileAt(int x, int y);

@@ -1,4 +1,4 @@
-// copyright 2014 nigel nelson
+// Copyright 2014 nigel nelson
 
 #include <fstream>
 #include <string.h>
@@ -70,22 +70,23 @@ char World::tileAt(int x, int y) {
 
 void World::run(WINDOW* win) {
   // create some HUD windows
-  WINDOW* hud = newwin(5, 20, 2, 2);
-  box(hud, 0, 0);
-  mvwaddstr(hud, 4, 4, "hi");
+  WINDOW* hud = newwin(5, 20, 1, 1);
 
   // structs needed for sleeping
   struct timespec sleeptime, notused;
   sleeptime.tv_sec = 0;
-  sleeptime.tv_nsec = (1000000000/33);
+  sleeptime.tv_nsec = (1000000000/15);
 
   while (1) {
     // key
     timeout(0);
     int input = getch();
     // frame action
-    int donext = this->doFrame(win, input);
-    wrefresh(hud);
+    int donext = this->act(input);
+    // draw the things
+    wclear(win);
+    this->drawWorld(win);
+    this->drawHUD(hud);
     // do next frame?
     if (!donext) break;
     // wait
@@ -93,13 +94,8 @@ void World::run(WINDOW* win) {
   }
 }
 
-int World::doFrame(WINDOW* win, int key) {
-  // frame number
-  static int frame = -1;
-  ++frame;
-
-  // input
-  bool moved = true;
+int World::act(int key) {
+  // process input
   if (key == 100) {
     // right
     if(tileAt(this->playerX+1, this->playerY) == World::TILE_FLOOR)
@@ -116,29 +112,35 @@ int World::doFrame(WINDOW* win, int key) {
     // up
     if(tileAt(this->playerX, this->playerY-1) == World::TILE_FLOOR)
       --this->playerY;
-  } else {
-    moved = false;
   }
+
+  // return 1 to continue running
+  return 1;
+}
+
+void World::drawWorld(WINDOW* win) {
+  // frame number
+  static int frame = -1;
+  ++frame;
 
   // hide cursor
   curs_set(0);
 
-  // clear screen
-  wclear(win);
-
   // draw what we can see of the map
-  int radx, rady;
-  getmaxyx(win, rady, radx);
-  radx /= 10;
-  rady /= 6;
+  int winwidth, winheight;
+  getmaxyx(win, winheight, winwidth);
+  int radx = (winwidth / 5 - 1) / 2;
+  int rady = (winheight / 3 - 1) / 2;
+  int offx = (winwidth - (radx * 2 + 1) * 5) / 2;
+  int offy = (winheight - (rady * 2 + 1) * 3) / 2;
   int left = max(this->playerX-radx, 0);
   int right = min(this->playerX+radx, this->cols-1);
   int top = max(this->playerY-rady, 0);
   int bottom = min(this->playerY+rady, this->rows-1);
   for (int r = top; r <= bottom; ++r) {
     for (int c = left; c <= right; ++c) {
-      int cx = (c - this->playerX + radx) * 5;
-      int cy = (r - this->playerY + rady) * 3;
+      int cx = (c - this->playerX + radx) * 5 + offx;
+      int cy = (r - this->playerY + rady) * 3 + offy;
       if(r == this->playerY && c == this->playerX)
         drawTile(World::TILE_PLAYER, win, cx, cy, frame);
       else
@@ -148,15 +150,12 @@ int World::doFrame(WINDOW* win, int key) {
 
   // output everything to the screen
   wrefresh(win);
-
-  // return 1 to continue running
-  return 1;
 }
 
 void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
   // the player
   if (tile == World::TILE_PLAYER) {
-    int color = (frame / 2)%6 + 2;
+    int color = frame % 6 + 2;
     wattron(win, COLOR_PAIR(color));
     mvwaddstr(win, y + 0, x + 1,  " 0 ");
     mvwaddstr(win, y + 1, x + 1,  "+|+");
@@ -179,4 +178,13 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
       for(int r = 0; r < 3; ++r)
         mvwaddch(win, y + r, x + r, tile);
   }
+}
+
+void World::drawHUD(WINDOW* win) {
+  // using wborder instead of box, because box seems to look weird while
+  // using putty to connect to the machine remotely?? idk idk idk
+  wattron(win, COLOR_PAIR(5) | A_REVERSE);
+  wborder(win, '|', '|', '-', '_', '+', '+', 'L', 'J');
+  mvwprintw(win, 2, 2, "\"%s\"", this->name.c_str());
+  wrefresh(win);
 }

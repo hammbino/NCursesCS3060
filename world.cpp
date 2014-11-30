@@ -7,8 +7,6 @@
 #include "world.h"
 using namespace std;
 
-// default world constructor
-//  creates an 8x8 closed-off room with the player inside.
 World::World() {
   this->name = "Default Room";
   this->rows = 8;
@@ -31,8 +29,6 @@ World::World() {
   this->playerY = 4;
 }
 
-// parameterized world constructor
-//  loads data from a file to create a world.
 World::World(string filename) {
   // open stream
   ifstream fs(filename.c_str());
@@ -157,10 +153,6 @@ int World::doFrame(WINDOW* win, int key) {
   return 1;
 }
 
-// draw a tile to the specified point on the screen
-//  the char represents what tile it is
-//  x and y are the top left coordinates of where to draw
-//  frame can be used to animate the tile
 void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
   // the player
   if (tile == World::TILE_PLAYER) {

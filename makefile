@@ -5,6 +5,6 @@ game: main.o world.o
 main.o: main.cpp
 	g++ -c main.cpp
 world.o: world.h world.cpp
-	c++ -c world.cpp
+	g++ -c world.cpp
 clean:
 	rm -f game *.o

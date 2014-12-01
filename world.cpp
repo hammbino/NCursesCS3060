@@ -166,10 +166,11 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
   }
   // nice brick wall
   else if (tile == World::TILE_WALL) {
-    wattron(win, COLOR_PAIR(2));
+    wattron(win, COLOR_PAIR(2) | A_REVERSE);
     mvwaddstr(win, y + 0, x, "|__|_");
     mvwaddstr(win, y + 1, x, "_|__|");
     mvwaddstr(win, y + 2, x, "|_|__");
+    wattroff(win, A_REVERSE);
   }
   // by default, just draw the character. basically, a shrug
   else {
@@ -183,7 +184,7 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
 void World::drawHUD(WINDOW* win) {
   // using wborder instead of box, because box seems to look weird while
   // using putty to connect to the machine remotely?? idk idk idk
-  wattron(win, COLOR_PAIR(5) | A_REVERSE);
+  wattron(win, COLOR_PAIR(5));
   wborder(win, '|', '|', '-', '_', '+', '+', 'L', 'J');
   mvwprintw(win, 2, 2, "\"%s\"", this->name.c_str());
   wrefresh(win);

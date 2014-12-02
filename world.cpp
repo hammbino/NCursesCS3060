@@ -30,6 +30,14 @@ World::World() {
 }
 
 World::World(string filename) {
+  this->loadFile(filename);
+}
+
+World::~World() {
+  delete[] this->tiles;
+}
+
+void World::loadFile(string filename) {
   // open stream
   ifstream fs(filename.c_str());
   if(!fs.good()) throw "failed to open world file.";
@@ -45,23 +53,53 @@ World::World(string filename) {
   // allocate array for tiles
   this->tiles = new char[this->rows * this->cols];
   // load in the rows, line by line
+  int numTeleps = 0;
   for(int r = 0; r < rows; ++r) {
     string line;
     getline(fs, line);
     strncpy(this->tiles + (r * this->cols), line.c_str(), this->cols);
     // see if the player's location was declared in this line
-    int c;
-    if((c = line.find(World::TILE_PLAYER)) != string::npos) {
-      this->playerX = c;
-      this->playerY = r;
-      // there will just be a blank space where he started
-      this->tiles[(r * this->cols) + c] = World::TILE_FLOOR;
+    // or if there's a teleport we need to keep track of
+    for (int c = 0; c < cols; ++c) {
+      switch(line.at(c)) {
+        case World::TILE_PLAYER:
+          this->movePlayerTo(c, r);
+          this->tiles[(r * this->cols) + c] = World::TILE_FLOOR;
+          break;
+        case World::TILE_TELEP:
+          ++numTeleps;
+          break;
+      }
     }
+  }
+  //read in all teleports now
+  for (int i = 0; i < numTeleps; ++i) {
+    Telep t;
+    fs >> t.x;
+    fs.ignore(1);
+    fs >> t.y;
+    fs.ignore(1);
+    fs.get(this->tiles[(t.y * this->cols) + t.x]);
+    fs.ignore(1);
+    fs >> t.toFile;
+    fs.ignore(1);
+    fs >> t.toX;
+    fs.ignore(1);
+    fs >> t.toY;
+    fs.ignore(1);
+    teleps.push_back(t);
   }
 }
 
-World::~World() {
+void World::changeFile(string filename) {
   delete[] this->tiles;
+  teleps.clear();
+  this->loadFile(filename);
+}
+
+void World::movePlayerTo(int x, int y) {
+  this->playerX = x;
+  this->playerY = y;
 }
 
 char World::tileAt(int x, int y) {
@@ -95,23 +133,31 @@ void World::run(WINDOW* win) {
 }
 
 int World::act(int key) {
-  // process input
-  if (key == 100) {
-    // right
-    if(tileAt(this->playerX+1, this->playerY) == World::TILE_FLOOR)
-      ++this->playerX;
-  } else if (key == 97) {
-    // left
-    if(tileAt(this->playerX-1, this->playerY) == World::TILE_FLOOR)
-      --this->playerX;
-  } else if (key == 115) {
-    // down
-    if(tileAt(this->playerX, this->playerY+1) == World::TILE_FLOOR)
-      ++this->playerY;
-  } else if (key == 119) {
-    // up
-    if(tileAt(this->playerX, this->playerY-1) == World::TILE_FLOOR)
-      --this->playerY;
+  // quitting the game?
+  if (key == 113) {
+    return 0;
+  }
+
+  // moving?
+  int toX = this->playerX;
+  int toY = this->playerY;
+  if (key == 100) ++toX;
+  else if (key == 97) --toX;
+  else if (key == 115) ++toY;
+  else if (key == 119) --toY;
+  // if it's neither of those, just return.
+  else {
+    return 1;
+  }
+  // if it is... let's move!
+  // teleport?
+  Telep* tp;
+  if ((tp = this->getTeleport(toX, toY)) != NULL) {
+    this->doTeleport(tp);
+  }
+  // otherwise just move.
+  else if (passable(tileAt(toX, toY))) {
+    this->movePlayerTo(toX, toY);
   }
 
   // return 1 to continue running
@@ -152,17 +198,30 @@ void World::drawWorld(WINDOW* win) {
   wrefresh(win);
 }
 
-void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
-  // the player
-  if (tile == World::TILE_PLAYER) {
-    int color = frame % 6 + 2;
-    wattron(win, COLOR_PAIR(color));
-    mvwaddstr(win, y + 0, x + 1,  " 0 ");
-    mvwaddstr(win, y + 1, x + 1,  "+|+");
-    mvwaddstr(win, y + 2, x + 1,  "/ \\");
+bool World::passable(char t) {
+  return t == World::TILE_FLOOR ||
+    t == World::TILE_GRASS;
+}
+
+World::Telep* World::getTeleport(int x, int y) {
+  for(int i = 0; i < teleps.size(); ++i) {
+    if(teleps[i].x == x && teleps[i].y == y)
+      return &teleps[i];
   }
+  return NULL;
+}
+
+void World::doTeleport(Telep* t) {
+  int x = t->toX;
+  int y = t->toY;
+  string filename = t->toFile;
+  this->changeFile(filename);
+  this->movePlayerTo(x, y);
+}
+
+void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
   // no floor
-  else if (tile == World::TILE_FLOOR) {
+  if (tile == World::TILE_FLOOR) {
   }
   // nice brick wall
   else if (tile == World::TILE_WALL) {
@@ -172,12 +231,47 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
     mvwaddstr(win, y + 2, x, "|_|__");
     wattroff(win, A_REVERSE);
   }
+  // trees!
+  else if (tile == World::TILE_TREE) {
+    wattron(win, COLOR_PAIR(3) | A_REVERSE);
+    mvwaddstr(win, y + 0, x + 1, "/\\");
+    mvwaddstr(win, y + 1, x, "//\\\\");
+    wattron(win, COLOR_PAIR(5));
+    wattroff(win, A_REVERSE);
+    mvwaddstr(win, y + 2, x + 1, "##");
+  }
+  // water
+  else if(tile == World::TILE_WATER) {
+    static string water = "~   ~   ~   ~   ~   ";
+    wattron(win, COLOR_PAIR(7) | A_REVERSE);
+    for (int i = 0; i < 3; ++i) {
+      int pos = 10 + (frame/4 + y + x + i)%4 * (((y + i) % 2)? -1 : 1);
+      mvwaddstr(win, y + i, x, water.substr(pos, 5).c_str());
+    }
+    wattroff(win, A_REVERSE);
+  }
+  // stairs
+  else if(tile == World::TILE_STAIRS) {
+    wattrset(win, A_REVERSE);
+    mvwaddstr(win, y + 0, x + 4, "_");
+    mvwaddstr(win, y + 1, x + 2, "___");
+    mvwaddstr(win, y + 2, x, "     ");
+    wattroff(win, A_REVERSE);
+  }
+  // the player
+  else if (tile == World::TILE_PLAYER) {
+    int color = frame % 6 + 2;
+    wattron(win, COLOR_PAIR(color));
+    mvwaddstr(win, y + 0, x + 1,  " 0 ");
+    mvwaddstr(win, y + 1, x + 1,  "+|+");
+    mvwaddstr(win, y + 2, x + 1,  "/ \\");
+  }
   // by default, just draw the character. basically, a shrug
   else {
     wattron(win, COLOR_PAIR(1));
     for(int c = 0; c < 5; ++c)
       for(int r = 0; r < 3; ++r)
-        mvwaddch(win, y + r, x + r, tile);
+        mvwaddch(win, y + r, x + c, tile);
   }
 }
 

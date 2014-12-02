@@ -49,7 +49,7 @@ int main(void) {
   populateCharacters(people);
 
   // create world and run it
-  World w("data/floor1");
+  World w("data/swamp");
   w.run(mainwin);
 
   // clean up and close

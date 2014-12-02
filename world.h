@@ -11,12 +11,21 @@
 
 #pragma once
 #include <string>
+#include <vector>
 #include <curses.h>
 
 using namespace std;
 
 class World {
   private:
+    // teleport class
+    //  store where on the map a teleport is, and where it goes to
+    class Telep {
+      public:
+        int x, y;
+        int toX, toY;
+        string toFile;
+    };
     // name of the room
     string name;
     // array of tile data for the room
@@ -24,7 +33,11 @@ class World {
     char * tiles;
     // location of the player on the map (top-left based)
     int playerX, playerY;
+    // vector containing all teleports
+    vector<Telep> teleps;
 
+    // load in a world
+    void loadFile(string filename);
     // execute a single frame of the game. called by run().
     //  will take input for the user and update the player's location.
     //  will also spawn other interaction windows if the player talks to an
@@ -37,10 +50,6 @@ class World {
     // draw the HUD at the top of the screen. called by run().
     //  will draw into the window specified.
     void drawHUD(WINDOW* window);
-    // execute a single frame of the game. called by run() repeatedly.
-    //  will take in input from the user, update the player's position,
-    //  and redraw the screen to the given window.
-    int doFrame(WINDOW* window, int key);
     // get the char representing the tile at that point on the map
     char tileAt(int x, int y);
     // draw a single tile somewhere in the given window.
@@ -51,12 +60,23 @@ class World {
     //  frame: how many frames have been executed by doFrame. can be
     //    used to animate a tile.
     void drawTile(char tile, WINDOW* window, int x, int y, int frame);
+    // is the player able to pass over this kind of tile?
+    bool passable(char tile);
+    // is there a teleport here?
+    Telep* getTeleport(int x, int y);
+    // actually do teleport!
+    void doTeleport(Telep*);
 
   public:
     // constants representing the types of tiles
-    static const char TILE_WALL = 'X';
     static const char TILE_FLOOR = ' ';
+    static const char TILE_WALL = 'X';
+    static const char TILE_TREE = 'T';
+    static const char TILE_WATER = '~';
+    static const char TILE_GRASS = ',';
+    static const char TILE_STAIRS = '/';
     static const char TILE_PLAYER = 'p';
+    static const char TILE_TELEP = '!';
     // default world constructor
     //  creates an 8x8 closed-off room with the player inside.
     World();
@@ -65,6 +85,10 @@ class World {
     World(string filename);
     // the deconstructor must delete the tile array
     ~World();
+    // move player to a position
+    void movePlayerTo(int x, int y);
+    // change to a different world file
+    void changeFile(string filename);
     // display the world in the given window, and allow the player
     // to move their character around the screen
     void run(WINDOW* window);

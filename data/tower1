@@ -3,8 +3,8 @@ Floor 1
 12
 XXXXXXXXXXXXXXXX
 X         X    X
-X         X p  X
-X   XX    XX   X
+X         X!   X
+X   XX    XXX  X
 X    X         X
 X    XXXX      X
 X       XX     X
@@ -13,3 +13,4 @@ X    X  X   XXXX
 XXX XX         X
 X   XXX       XX
 XXXXXXXXXXXXXXXX
+11 2 / data/swamp 10 3

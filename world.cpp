@@ -278,6 +278,7 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
 void World::drawHUD(WINDOW* win) {
   // using wborder instead of box, because box seems to look weird while
   // using putty to connect to the machine remotely?? idk idk idk
+  wclear(win);
   wattron(win, COLOR_PAIR(5));
   wborder(win, '|', '|', '-', '_', '+', '+', 'L', 'J');
   mvwprintw(win, 2, 2, "\"%s\"", this->name.c_str());

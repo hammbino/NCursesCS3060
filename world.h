@@ -2,12 +2,15 @@
 //
 // WORLD.H
 //
-// Describes the overworld the player moves around in. For now, it only
-// represents a single room. The room data can be provided via a file, whose
-// path should be passed in as an argument. 
+// Describes the world a player can move around in. Data can be loaded in
+// from a file, containing the data for a specific map. As the player
+// navigates the world, it might enter a new map, and so load in some new
+// data. As the player explores they may also find students and vendors to
+// interact with; this will call out to their specific functions, waiting for
+// the interaction to finish.
 //
-// When run() is called, it will display the world in the given window, and
-// will allow the player to move their character around the screen. 
+// To begin running the world logic, simply call run(). This will display
+// the world in the window given.
 
 #pragma once
 #include <string>
@@ -62,9 +65,12 @@ class World {
     void drawTile(char tile, WINDOW* window, int x, int y, int frame);
     // is the player able to pass over this kind of tile?
     bool passable(char tile);
-    // is there a teleport here?
+    // is there a teleport here? if so, retrieve it. otherwise it will
+    //  return a null pointer.
     Telep* getTeleport(int x, int y);
     // actually do teleport!
+    //  unloads the current map and loads the new one, then sets the
+    //  player's location.
     void doTeleport(Telep*);
 
   public:
@@ -88,6 +94,8 @@ class World {
     // move player to a position
     void movePlayerTo(int x, int y);
     // change to a different world file
+    //  note that the player position will be set to the specified location
+    //  in the file, or to a default location.
     void changeFile(string filename);
     // display the world in the given window, and allow the player
     // to move their character around the screen

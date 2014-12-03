@@ -119,6 +119,8 @@ void World::run(WINDOW* win) {
     // key
     timeout(0);
     int input = getch();
+    // clear out the rest of the buffer
+    while (getch() != ERR) continue;
     // frame action
     int donext = this->act(input);
     // draw the things
@@ -141,10 +143,14 @@ int World::act(int key) {
   // moving?
   int toX = this->playerX;
   int toY = this->playerY;
-  if (key == 100) ++toX;
-  else if (key == 97) --toX;
-  else if (key == 115) ++toY;
-  else if (key == 119) --toY;
+  if (key == KEY_RIGHT || key == 'd' || key == 'l')
+    ++toX;
+  else if (key == KEY_LEFT || key == 'a' || key == 'h')
+    --toX;
+  else if (key == KEY_DOWN || key == 's' || key == 'j')
+    ++toY;
+  else if (key == KEY_UP || key == 'w' || key == 'k')
+    --toY;
   // if it's neither of those, just return.
   else {
     return 1;

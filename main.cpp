@@ -34,6 +34,9 @@ int main(void) {
     exit(EXIT_FAILURE);
   }
 
+  // keypad mode allows for arrow keys
+  keypad(mainwin, TRUE);
+
   // colors
   start_color();
   init_pair(1, COLOR_WHITE, COLOR_BLACK);

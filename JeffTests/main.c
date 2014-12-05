@@ -140,6 +140,7 @@ void setOptions(character* options) {
   const char * rock = options->rockName.c_str();
   const char * paper = options->paperName.c_str();
   const char * scissors = options->scissorsName.c_str();
+ 
   if(options->type == "Vendor") {
 	n_choices = 4;
 	choices[index] = rock;

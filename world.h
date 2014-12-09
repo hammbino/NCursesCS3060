@@ -42,6 +42,8 @@ class World {
     // array of tile data for the room
     int cols, rows;
     char * tiles;
+    // what tile is the outside?
+    char outTile;
     // location of the player on the map (top-left based)
     int playerX, playerY;
     // vectors containing various objects

@@ -47,6 +47,9 @@ void World::loadFile(string filename) {
   fs.ignore(1);
   fs >> this->rows;
   fs.ignore(1);
+  // the tile on the outside aaarea
+  fs.get(this->outTile);
+  fs.ignore(1);
   // default player position; should be set later
   this->playerX = 2;
   this->playerY = 2;
@@ -118,6 +121,7 @@ void World::loadFile(string filename) {
 void World::changeFile(string filename) {
   delete[] this->tiles;
   teleps.clear();
+  signs.clear();
   this->loadFile(filename);
 }
 
@@ -215,15 +219,13 @@ void World::drawWorld(WINDOW* win) {
   int rady = (winheight / 3 - 1) / 2;
   int offx = (winwidth - (radx * 2 + 1) * 5) / 2;
   int offy = (winheight - (rady * 2 + 1) * 3) / 2;
-  int left = max(this->playerX-radx, 0);
-  int right = min(this->playerX+radx, this->cols-1);
-  int top = max(this->playerY-rady, 0);
-  int bottom = min(this->playerY+rady, this->rows-1);
-  for (int r = top; r <= bottom; ++r) {
-    for (int c = left; c <= right; ++c) {
+  for (int r = this->playerY - rady; r <= this->playerY + rady; ++r) {
+    for (int c = this->playerX - radx; c <= this->playerX + radx; ++c) {
       int cx = (c - this->playerX + radx) * 5 + offx;
       int cy = (r - this->playerY + rady) * 3 + offy;
-      if(r == this->playerY && c == this->playerX)
+      if(r < 0 || r >= this->rows || c < 0 || c >= this->cols)
+        drawTile(this->outTile, win, cx, cy, frame);
+      else if(r == this->playerY && c == this->playerX)
         drawTile(World::TILE_PLAYER, win, cx, cy, frame);
       else
         drawTile(this->tileAt(c, r), win, cx, cy, frame);

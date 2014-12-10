@@ -29,15 +29,26 @@ class World {
         int toX, toY;
         string toFile;
     };
+    // sign class
+    //  stores where on the map a sign is, and what its message is
+    class Sign {
+      public:
+        int x, y;
+        int cols, rows;
+        vector<string> lines;
+    };
     // name of the room
     string name;
     // array of tile data for the room
     int cols, rows;
     char * tiles;
+    // what tile is the outside?
+    char outTile;
     // location of the player on the map (top-left based)
     int playerX, playerY;
-    // vector containing all teleports
+    // vectors containing various objects
     vector<Telep> teleps;
+    vector<Sign> signs;
 
     // load in a world
     void loadFile(string filename);
@@ -65,13 +76,15 @@ class World {
     void drawTile(char tile, WINDOW* window, int x, int y, int frame);
     // is the player able to pass over this kind of tile?
     bool passable(char tile);
-    // is there a teleport here? if so, retrieve it. otherwise it will
-    //  return a null pointer.
+    // functions to check if there is some object there
     Telep* getTeleport(int x, int y);
+    Sign* getSign(int x, int y);
     // actually do teleport!
     //  unloads the current map and loads the new one, then sets the
     //  player's location.
     void doTeleport(Telep*);
+    // display sign message
+    void doSign(Sign*);
 
   public:
     // constants representing the types of tiles
@@ -83,6 +96,7 @@ class World {
     static const char TILE_STAIRS = '/';
     static const char TILE_PLAYER = 'p';
     static const char TILE_TELEP = '!';
+    static const char TILE_SIGN = ':';
     // default world constructor
     //  creates an 8x8 closed-off room with the player inside.
     World();

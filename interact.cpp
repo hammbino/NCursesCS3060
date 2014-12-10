@@ -160,8 +160,14 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
 
 }
 
+<<<<<<< HEAD
 void Interact::buy(character* merchant, int choice) {
 
+=======
+void Interact::buy(character* merchant) {
+    int cost = 200; //(merchant->grade - 1) * 100;
+    bool bought = FALSE;
+>>>>>>> b280eaf403e9a9e916cb05d45135901e62380ed6
   // Put weapons for player in an array
 
   // Put weapons for merchant in an array
@@ -169,18 +175,38 @@ void Interact::buy(character* merchant, int choice) {
   // Display the players weapons
 
   // Dislpay the merchant's weapons
+    
   // Display question to user asking if they would like to buy anything
+    mvprintw(0,0, "Are you here to buy or waiste my time?");
   // Get user input
 
   // Begin while loop while user input is y
 
   // Ask user what they would like to buy
-
+    mvprintw(0,0, "Select anything anything you'd like");
   // Get user input
 
   // Compare items cost to the money the user has
-
+    if (cost > *player->money) {
+      mvprintw(0,0, "Do I look like the charitable type to you? Don't come back without a bigger wallet.");
+    }
   // If player has enough money confirm purchase
+    else {
+      mvprintw(0,0, "Ecellent choice, that should help you beat the others.");
+        player->money - cost;
+        bought = TRUE;
+        if (choice is rock) {
+            player->rockGrade = merchant->grade;
+            player->rockName = merchant->rockName;
+        } else if (choice = paperName) {
+            player->paperGrade = merchant->grade;
+            player->paperName = merchant->paperName;
+        } else {
+            player->scissorsGrade = merchant->grade;
+            player->scissorsName = merchant->scissorsName;
+        }
+        //update player info on screen money and equipment
+    }
   
   // If player does not have enough money display error message
 
@@ -193,8 +219,10 @@ void Interact::buy(character* merchant, int choice) {
   // End while loop
 
   // Display message to user indicating exiting store
-
-  // return void
+    if (bought)
+        mvprintw(0,0, "Thanks for the money. I'll see you again");
+    else
+        mvprintw(0,0, "Good luck winning without my help.");
 }
 
 void Interact::print_menu(WINDOW *menu_win, int highlight) {

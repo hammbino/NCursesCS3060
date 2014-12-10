@@ -47,6 +47,9 @@ void World::loadFile(string filename) {
   fs.ignore(1);
   fs >> this->rows;
   fs.ignore(1);
+  // the tile on the outside aaarea
+  fs.get(this->outTile);
+  fs.ignore(1);
   // default player position; should be set later
   this->playerX = 2;
   this->playerY = 2;
@@ -54,6 +57,7 @@ void World::loadFile(string filename) {
   this->tiles = new char[this->rows * this->cols];
   // load in the rows, line by line
   int numTeleps = 0;
+  int numSigns = 0;
   for(int r = 0; r < rows; ++r) {
     string line;
     getline(fs, line);
@@ -68,6 +72,9 @@ void World::loadFile(string filename) {
           break;
         case World::TILE_TELEP:
           ++numTeleps;
+          break;
+        case World::TILE_SIGN:
+          ++numSigns;
           break;
       }
     }
@@ -89,11 +96,32 @@ void World::loadFile(string filename) {
     fs.ignore(1);
     teleps.push_back(t);
   }
+  for (int i = 0; i < numSigns; ++i) {
+    Sign t;
+    fs >> t.x;
+    fs.ignore(1);
+    fs >> t.y;
+    fs.ignore(1);
+    fs.get(this->tiles[(t.y * this->cols) + t.x]);
+    fs.ignore(1);
+    fs >> t.cols;
+    fs.ignore(1);
+    fs >> t.rows;
+    fs.ignore(1);
+    char* line = new char[t.cols + 1];
+    for(int i = 0; i < t.rows; ++i) {
+      fs.getline(line, t.cols + 1);
+      t.lines.push_back(string(line));
+    }
+    delete[] line;
+    signs.push_back(t);
+  }
 }
 
 void World::changeFile(string filename) {
   delete[] this->tiles;
   teleps.clear();
+  signs.clear();
   this->loadFile(filename);
 }
 
@@ -156,10 +184,16 @@ int World::act(int key) {
     return 1;
   }
   // if it is... let's move!
-  // teleport?
+
   Telep* tp;
+  Sign* sg;
+  // teleport?
   if ((tp = this->getTeleport(toX, toY)) != NULL) {
     this->doTeleport(tp);
+  }
+  // sign?
+  else if((sg = this->getSign(toX, toY)) != NULL) {
+    this->doSign(sg);
   }
   // otherwise just move.
   else if (passable(tileAt(toX, toY))) {
@@ -185,15 +219,13 @@ void World::drawWorld(WINDOW* win) {
   int rady = (winheight / 3 - 1) / 2;
   int offx = (winwidth - (radx * 2 + 1) * 5) / 2;
   int offy = (winheight - (rady * 2 + 1) * 3) / 2;
-  int left = max(this->playerX-radx, 0);
-  int right = min(this->playerX+radx, this->cols-1);
-  int top = max(this->playerY-rady, 0);
-  int bottom = min(this->playerY+rady, this->rows-1);
-  for (int r = top; r <= bottom; ++r) {
-    for (int c = left; c <= right; ++c) {
+  for (int r = this->playerY - rady; r <= this->playerY + rady; ++r) {
+    for (int c = this->playerX - radx; c <= this->playerX + radx; ++c) {
       int cx = (c - this->playerX + radx) * 5 + offx;
       int cy = (r - this->playerY + rady) * 3 + offy;
-      if(r == this->playerY && c == this->playerX)
+      if(r < 0 || r >= this->rows || c < 0 || c >= this->cols)
+        drawTile(this->outTile, win, cx, cy, frame);
+      else if(r == this->playerY && c == this->playerX)
         drawTile(World::TILE_PLAYER, win, cx, cy, frame);
       else
         drawTile(this->tileAt(c, r), win, cx, cy, frame);
@@ -217,6 +249,14 @@ World::Telep* World::getTeleport(int x, int y) {
   return NULL;
 }
 
+World::Sign* World::getSign(int x, int y) {
+  for(int i = 0; i < signs.size(); ++i) {
+    if(signs[i].x == x && signs[i].y == y)
+      return &signs[i];
+  }
+  return NULL;
+}
+
 void World::doTeleport(Telep* t) {
   int x = t->toX;
   int y = t->toY;
@@ -225,36 +265,52 @@ void World::doTeleport(Telep* t) {
   this->movePlayerTo(x, y);
 }
 
+void World::doSign(Sign* t) {
+  // figure out where to put the window
+  int x, y;
+  getmaxyx(stdscr, y, x);
+  // create the window & display message
+  WINDOW* win = newwin(t->rows + 2, t->cols + 4,
+    (y - t->rows - 2) / 2, (x - t->cols - 4) / 2);
+  wborder(win, '{', '}', '~', '~', '#', '#', '#', '#');
+  for(int i = 0; i < t->rows; ++i) {
+    mvwprintw(win, i + 1, 2, t->lines[i].c_str());
+  }
+  wrefresh(win);
+  // wait for user to press a key
+  timeout(-1);
+  getch();
+  // done. kill window
+  delwin(win);
+}
+
 void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
   // no floor
   if (tile == World::TILE_FLOOR) {
   }
   // nice brick wall
   else if (tile == World::TILE_WALL) {
-    wattron(win, COLOR_PAIR(2) | A_REVERSE);
+    wattrset(win, COLOR_PAIR(2) | A_REVERSE);
     mvwaddstr(win, y + 0, x, "|__|_");
     mvwaddstr(win, y + 1, x, "_|__|");
     mvwaddstr(win, y + 2, x, "|_|__");
-    wattroff(win, A_REVERSE);
   }
   // trees!
   else if (tile == World::TILE_TREE) {
-    wattron(win, COLOR_PAIR(3) | A_REVERSE);
+    wattrset(win, COLOR_PAIR(3) | A_REVERSE);
     mvwaddstr(win, y + 0, x + 1, "/\\");
     mvwaddstr(win, y + 1, x, "//\\\\");
-    wattron(win, COLOR_PAIR(5));
-    wattroff(win, A_REVERSE);
+    wattrset(win, COLOR_PAIR(5));
     mvwaddstr(win, y + 2, x + 1, "##");
   }
   // water
   else if(tile == World::TILE_WATER) {
     static string water = "~   ~   ~   ~   ~   ";
-    wattron(win, COLOR_PAIR(7) | A_REVERSE);
+    wattrset(win, COLOR_PAIR(7) | A_REVERSE);
     for (int i = 0; i < 3; ++i) {
       int pos = 10 + (frame/4 + y + x + i)%4 * (((y + i) % 2)? -1 : 1);
       mvwaddstr(win, y + i, x, water.substr(pos, 5).c_str());
     }
-    wattroff(win, A_REVERSE);
   }
   // stairs
   else if(tile == World::TILE_STAIRS) {
@@ -262,19 +318,25 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
     mvwaddstr(win, y + 0, x + 4, "_");
     mvwaddstr(win, y + 1, x + 2, "___");
     mvwaddstr(win, y + 2, x, "     ");
-    wattroff(win, A_REVERSE);
+  }
+  // signs
+  else if(tile == World::TILE_SIGN) {
+    wattrset(win, COLOR_PAIR(3));
+    mvwaddstr(win, y + 0, x, "+---+");
+    mvwaddstr(win, y + 1, x, "|AAA|");
+    mvwaddstr(win, y + 2, x, " _|_ ");
   }
   // the player
   else if (tile == World::TILE_PLAYER) {
     int color = frame % 6 + 2;
-    wattron(win, COLOR_PAIR(color));
+    wattrset(win, COLOR_PAIR(color));
     mvwaddstr(win, y + 0, x + 1,  " 0 ");
     mvwaddstr(win, y + 1, x + 1,  "+|+");
     mvwaddstr(win, y + 2, x + 1,  "/ \\");
   }
   // by default, just draw the character. basically, a shrug
   else {
-    wattron(win, COLOR_PAIR(1));
+    wattrset(win, A_REVERSE);
     for(int c = 0; c < 5; ++c)
       for(int r = 0; r < 3; ++r)
         mvwaddch(win, y + r, x + c, tile);

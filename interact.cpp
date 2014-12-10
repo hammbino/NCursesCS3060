@@ -135,26 +135,44 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
 	p2 = paper;
 	winner = (p1 - p2 + 3) % 3;
 	tugOfWarBar += fightLogic(playerGrade, winner, enemy->paperGrade);
+    wprintw(result_win, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
+	wprintw(result_win, "%s used %s\n", enemy->name.c_str(), enemy->paperName.c_str());
+	wprintw(result_win, "Tug of war bar = %d\n", tugOfWarBar);
+	wrefresh(result_win);
 
   } else if (enemy->paperGrade == 0 && enemy->scissorsGrade == 0) { // it is an enemy with only rock
 	p2 = rock;
 	winner = (p1 - p2 + 3) % 3;
     tugOfWarBar += fightLogic(playerGrade, winner, enemy->rockGrade);
+	wprintw(result_win, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
+	wprintw(result_win, "%s used %s\n", enemy->name.c_str(), enemy->rockName.c_str());
+	wprintw(result_win, "Tug of war bar = %d\n", tugOfWarBar);
+	wrefresh(result_win);
 
   } else { // enemy has all weapons choose random
 	p2 = rand() % 3; // computer chooses
 	if (p2 == 0) { // computer chose rock
 	  winner = (p1 - p2 + 3) % 3;
 	  tugOfWarBar += fightLogic(playerGrade, winner, enemy->rockGrade);
-
+	  wprintw(result_win, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
+	  wprintw(result_win, "%s used %s\n", enemy->name.c_str(), enemy->rockName.c_str());
+	  wprintw(result_win, "Tug of war bar = %d\n", tugOfWarBar);
+	  wrefresh(result_win);
 	} else if (p2 == 1) { // computer chose paper
 	  winner = (p1 - p2 + 3) % 3;
 	  tugOfWarBar += fightLogic(playerGrade, winner, enemy->paperGrade);
+	  wprintw(result_win, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
+	  wprintw(result_win, "%s used %s\n", enemy->name.c_str(), enemy->paperName.c_str());
+	  wprintw(result_win, "Tug of war bar = %d\n", tugOfWarBar);
+	  wrefresh(result_win);
 
 	} else { // computer chose scissors
 	  winner = (p1 - p2 + 3) % 3;
 	  tugOfWarBar += fightLogic(playerGrade, winner, enemy->scissorsGrade);
-
+	  wprintw(result_win, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
+	  wprintw(result_win, "%s used %s\n", enemy->name.c_str(), enemy->scissorsName.c_str());
+	  wprintw(result_win, "Tug of war bar = %d\n", tugOfWarBar);
+	  wrefresh(result_win);
 	}
   }
 

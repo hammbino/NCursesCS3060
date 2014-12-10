@@ -160,14 +160,10 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
 
 }
 
-<<<<<<< HEAD
-void Interact::buy(character* merchant, int choice) {
-
-=======
 void Interact::buy(character* merchant) {
     int cost = 200; //(merchant->grade - 1) * 100;
     bool bought = FALSE;
->>>>>>> b280eaf403e9a9e916cb05d45135901e62380ed6
+
   // Put weapons for player in an array
 
   // Put weapons for merchant in an array

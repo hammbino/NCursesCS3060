@@ -12,19 +12,23 @@
 // To begin running the world logic, simply call run(). This will display
 // the world in the window given.
 
+#ifndef WORLD_H_
+#define WORLD_H_
 #pragma once
+
+#include <curses.h>
 #include <string>
 #include <vector>
-#include <curses.h>
 
-using namespace std;
+using std::string;
+using std::vector;
 
 class World {
-  private:
+ private:
     // teleport class
     //  store where on the map a teleport is, and where it goes to
     class Telep {
-      public:
+     public:
         int x, y;
         int toX, toY;
         string toFile;
@@ -32,7 +36,7 @@ class World {
     // sign class
     //  stores where on the map a sign is, and what its message is
     class Sign {
-      public:
+     public:
         int x, y;
         int cols, rows;
         vector<string> lines;
@@ -82,11 +86,11 @@ class World {
     // actually do teleport!
     //  unloads the current map and loads the new one, then sets the
     //  player's location.
-    void doTeleport(Telep*);
+    void doTeleport(Telep* teleport);
     // display sign message
-    void doSign(Sign*);
+    void doSign(Sign* sign);
 
-  public:
+ public:
     // constants representing the types of tiles
     static const char TILE_FLOOR = ' ';
     static const char TILE_WALL = 'X';
@@ -102,7 +106,7 @@ class World {
     World();
     // parameterized world constructor
     //  loads data from a file to create a world.
-    World(string filename);
+    explicit World(string filename);
     // the deconstructor must delete the tile array
     ~World();
     // move player to a position
@@ -114,5 +118,6 @@ class World {
     // display the world in the given window, and allow the player
     // to move their character around the screen
     void run(WINDOW* window);
-
 };
+
+#endif  // WORLD_H_

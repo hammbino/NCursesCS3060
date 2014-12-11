@@ -19,8 +19,6 @@ int starty = 0;
 string choices[4];
 int n_choices;
 
-character* player = new character(2,2,2,10,"Player","Dude","Rock","Paper","Scissors", 0);
-
 class Interact {
 
 public:

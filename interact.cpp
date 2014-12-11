@@ -80,16 +80,20 @@ void Interact::getDecision(character* person) {
     }
   }
   if (tugOfWarBar <= -6) {
-    mvwprintw(result_win,1,1,"I'm the best! Go home!\n");
+    mvwprintw(result_win,1,1,"I'm the best! Go home!              ");
 	wrefresh(result_win);
   }
   else if (tugOfWarBar >= 6) {
     person->encounterDone++;
-    mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!\n");
+    mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!           ");
+	// print money gained = sum of all enemy grades * 10 (or 20 or 30 depending on how long it takes)
 	wrefresh(result_win); 
   }
-  while (getch() != '10') {
-	mvwprintw(result_win,4,1,"Press enter to continue");
+
+  while (c != 'c') { // Hold window open until they press enter
+	c = wgetch(result_win);
+	mvwprintw(result_win,4,1,"Press c to continue");
+	wrefresh(result_win);
   }
 //  clrtoeol();
 //  refresh();
@@ -141,27 +145,27 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
 	winner = (p1 - p2 + 3) % 3;
 	tugOfWarBar += fightLogic(playerGrade, winner, enemy->scissorsGrade);
 
-	mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
-	mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->scissorsName.c_str());
-	mvwprintw(result_win,3,1, "Tug of war bar = %d ", tugOfWarBar);
+	mvwprintw(result_win,1,1, "%s used %s                   ", player->name.c_str(), playerWeap.c_str());
+	mvwprintw(result_win,2,1, "%s used %s                   ", enemy->name.c_str(), enemy->scissorsName.c_str());
+
 	wrefresh(result_win);
 
   } else if (enemy->rockGrade == 0 && enemy->scissorsGrade == 0) { // it is an enemy with only paper
 	p2 = paper;
 	winner = (p1 - p2 + 3) % 3;
 	tugOfWarBar += fightLogic(playerGrade, winner, enemy->paperGrade);
-    mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
-	mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->paperName.c_str());
-	mvwprintw(result_win,3,1, "Tug of war bar = %d ", tugOfWarBar);
+    mvwprintw(result_win,1,1, "%s used %s                   ", player->name.c_str(), playerWeap.c_str());
+	mvwprintw(result_win,2,1, "%s used %s                   ", enemy->name.c_str(), enemy->paperName.c_str());
+
 	wrefresh(result_win);
 
   } else if (enemy->paperGrade == 0 && enemy->scissorsGrade == 0) { // it is an enemy with only rock
 	p2 = rock;
 	winner = (p1 - p2 + 3) % 3;
     tugOfWarBar += fightLogic(playerGrade, winner, enemy->rockGrade);
-	mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
-	mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->rockName.c_str());
-	mvwprintw(result_win,3,1, "Tug of war bar = %d ", tugOfWarBar);
+	mvwprintw(result_win,1,1, "%s used %s                   ", player->name.c_str(), playerWeap.c_str());
+	mvwprintw(result_win,2,1, "%s used %s                   ", enemy->name.c_str(), enemy->rockName.c_str());
+
 	wrefresh(result_win);
 
   } else { // enemy has all weapons choose random
@@ -169,92 +173,34 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
 	if (p2 == 0) { // computer chose rock
 	  winner = (p1 - p2 + 3) % 3;
 	  tugOfWarBar += fightLogic(playerGrade, winner, enemy->rockGrade);
-	  mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
-	  mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->rockName.c_str());
-	  mvwprintw(result_win,3,1, "Tug of war bar = %d ", tugOfWarBar);
+	  mvwprintw(result_win,1,1, "%s used %s                 ", player->name.c_str(), playerWeap.c_str());
+	  mvwprintw(result_win,2,1, "%s used %s                 ", enemy->name.c_str(), enemy->rockName.c_str());
+
 	  wrefresh(result_win);
 	} else if (p2 == 1) { // computer chose paper
 	  winner = (p1 - p2 + 3) % 3;
 	  tugOfWarBar += fightLogic(playerGrade, winner, enemy->paperGrade);
-	  mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
-	  mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->paperName.c_str());
-	  mvwprintw(result_win,3,1, "Tug of war bar = %d ", tugOfWarBar);
+	  mvwprintw(result_win,1,1, "%s used %s                 ", player->name.c_str(), playerWeap.c_str());
+	  mvwprintw(result_win,2,1, "%s used %s                 ", enemy->name.c_str(), enemy->paperName.c_str());
+
 	  wrefresh(result_win);
 
 	} else { // computer chose scissors
 	  winner = (p1 - p2 + 3) % 3;
 	  tugOfWarBar += fightLogic(playerGrade, winner, enemy->scissorsGrade);
-	  mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
-	  mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->scissorsName.c_str());
-	  mvwprintw(result_win,3,1, "Tug of war bar = %d ", tugOfWarBar);
+	  mvwprintw(result_win,1,1, "%s used %s                 ", player->name.c_str(), playerWeap.c_str());
+	  mvwprintw(result_win,2,1, "%s used %s                 ", enemy->name.c_str(), enemy->scissorsName.c_str());
+
 	  wrefresh(result_win);
 	}
   }
 
+  mvwprintw(result_win,4,1, "Get to 6 you win. -6 you lose = %d             ", tugOfWarBar);
+  wrefresh(result_win);
 }
 
 void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
-    int cost = 200; //(merchant->grade - 1) * 100;
-    bool bought = FALSE;
-	int rock = 1;
-	int paper = 2;
-	int scissors = 3;
 
-  // Put weapons for player in an array
-
-  // Put weapons for merchant in an array
-
-  // Display the players weapons
-
-  // Dislpay the merchant's weapons
-    
-  // Display question to user asking if they would like to buy anything
-    mvwprintw(result_win,0,0, "Are you here to buy or waste my time?");
-  // Get user input
-
-  // Begin while loop while user input is y
-
-  // Ask user what they would like to buy
-    mvwprintw(result_win,0,0, "Select anything anything you'd like");
-  // Get user input
-
-  // Compare items cost to the money the user has
-    if (cost > player->money) {
-      mvwprintw(result_win,0,0, "Do I look like the charitable type to you? Don't come back without a bigger wallet.");
-    }
-  // If player has enough money confirm purchase
-    else {
-      mvwprintw(result_win,0,0, "Excellent choice, that should help you beat the others.");
-        player->money - cost;
-        bought = TRUE;
-        if (choice == rock) {
-            player->rockGrade = merchant->rockGrade;
-            player->rockName = merchant->rockName;
-        } else if (choice = paper) {
-            player->paperGrade = merchant->paperGrade;
-            player->paperName = merchant->paperName;
-        } else {
-            player->scissorsGrade = merchant->scissorsGrade;
-            player->scissorsName = merchant->scissorsName;
-        }
-        //update player info on screen money and equipment
-    }
-  
-  // If player does not have enough money display error message
-
-  // If player  has enough money  confirm purchase and subtract cost of item from players purse and equip weapon
-
-  // Ask user if they would like to make another purchase
-
-  // Get user's input
-
-  // End while loop
-
-  // Display message to user indicating exiting store
-    if (bought)
-        mvwprintw(result_win,1,1, "Thanks for the money. I'll see you again");
-    else
-        mvwprintw(result_win,1,1, "Good luck winning without my help.");
 }
 
 void Interact::print_menu(WINDOW *menu_win, int highlight) {
@@ -276,7 +222,7 @@ void Interact::print_menu(WINDOW *menu_win, int highlight) {
 
 void Interact::print_results(WINDOW *result_win, character* person) {
   box(result_win,0,0);
-  mvwprintw(result_win,1,1,"You approach %s\n", person->name);
+  mvwprintw(result_win,1,1,"You approach %s\n", person->name.c_str());
   wrefresh(result_win);
 }
 

@@ -30,6 +30,6 @@ public:
   void buy(WINDOW*, character*, int);
   void getDecision(character*);
   void print_menu(WINDOW *menu_win, int highlight);
-  void print_results(WINDOW *result_win);
+  void print_results(WINDOW *result_win, character*);
 };
 

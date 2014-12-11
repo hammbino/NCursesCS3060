@@ -31,7 +31,7 @@ void Interact::getDecision(character* person) {
   //mvprintw(0, 0, "Use arrow keys to go up and down, Press enter to select a choice");
   //refresh();
 
-  print_results(result_win);
+  print_results(result_win, person);
   if (person->encounterDone > 0) {
     //No introduction
     
@@ -274,9 +274,9 @@ void Interact::print_menu(WINDOW *menu_win, int highlight) {
   wrefresh(menu_win);
 }
 
-void Interact::print_results(WINDOW *result_win) {
+void Interact::print_results(WINDOW *result_win, character* person) {
   box(result_win,0,0);
-//  mvwprintw(result_win,1,1,"Greetings!\n");
+  mvwprintw(result_win,1,1,"You approach %s\n", person->name);
   wrefresh(result_win);
 }
 

@@ -35,61 +35,103 @@ void Interact::getDecision(character* person) {
   if (person->encounterDone > 0) {
     //No introduction
     
-    if (person->type == "Student") { 
+    if (person->type == "Student") {
       // If an enemy, display beaten message
 
-	  return;
-	}
+      return;
+    }
   }
   print_menu(menu_win, highlight);
 
-  while(tugOfWarBar > -6 && tugOfWarBar < 6/*&& choice != 4*/) {
-	print_menu(menu_win, highlight);
-    c = wgetch(menu_win);
-	choice = 0;
-    switch(c) {	
-	  case KEY_UP:
-	  case 'w':
-	  case 'k':
-        if(highlight == 1)
-          highlight = n_choices;
-        else
-          --highlight;
-        break;
-	  case KEY_DOWN:
-	  case 'j':
-	  case 's':
-        if(highlight == n_choices)
-          highlight = 1;
-        else 
-          ++highlight;
-        break;
-      case 10:
-        choice = highlight;
-        break;
-    }
-    print_menu(menu_win, highlight);
-    if(choice != 0)	{
-	  if (n_choices == 4) {
-        buy(result_win, person, choice);
-        //this will continue to be called until choice == 4
-      } else {
-        fight(result_win, person, choice);
+  if (n_choices == 4) {
+    mvwprintw(result_win,1,1, "Are you here to buy or waste my time?");
+
+    while(choice != 4) {
+      print_menu(menu_win, highlight);
+      c = wgetch(menu_win);
+      choice = 0;
+      switch(c) {
+        case KEY_UP:
+        case 'w':
+        case 'k':
+          if(highlight == 1)
+            highlight = n_choices;
+          else
+            --highlight;
+          break;
+
+        case KEY_DOWN:
+        case 'j':
+        case 's':
+          if(highlight == n_choices)
+            highlight = 1;
+          else
+            ++highlight;
+          break;
+
+        case 10:
+          choice = highlight;
+          break;
       }
-    
+      print_menu(menu_win, highlight);
+      if(choice != 0 && choice != 4) {
+        buy(result_win, person, choice);
+      }
+
+      if (bought && choice != 4) {
+        mvwprintw(result_win,2,1, "Select anything anything you'd like");
+      } else {
+        // Display message to user indicating exiting store
+        if (bought)
+          mvwprintw(result_win,1,1, "Thanks for the money. I'll see you again");
+        else
+          mvwprintw(result_win,1,1, "Good luck winning without my help.");
+      }
+    }
+  } else {
+    while(tugOfWarBar > -6 && tugOfWarBar < 6) {
+      print_menu(menu_win, highlight);
+      c = wgetch(menu_win);
+      choice = 0;
+      switch(c) {
+        case KEY_UP:
+        case 'w':
+        case 'k':
+          if(highlight == 1)
+            highlight = n_choices;
+          else
+            --highlight;
+          break;
+
+        case KEY_DOWN:
+        case 'j':
+        case 's':
+          if(highlight == n_choices)
+            highlight = 1;
+          else
+            ++highlight;
+          break;
+
+        case 10:
+          choice = highlight;
+          break;
+      }
+      print_menu(menu_win, highlight);
+      if(choice != 0)
+        fight(result_win, person, choice);
+    }
+    if (tugOfWarBar <= -6) {
+      mvwprintw(result_win,1,1,"I'm the best! Go home!\n");
+      wrefresh(result_win);
+    } else if (tugOfWarBar >= 6) {
+      person->encounterDone++;
+      mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!\n");
+      wrefresh(result_win);
     }
   }
-  if (tugOfWarBar <= -6) {
-    mvwprintw(result_win,1,1,"I'm the best! Go home!\n");
-	wrefresh(result_win);
-  }
-  else if (tugOfWarBar >= 6) {
-    person->encounterDone++;
-    mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!\n");
-	wrefresh(result_win); 
-  }
+
   while (getch() != '10') {
-	mvwprintw(result_win,4,1,"Press enter to continue");
+    mvwprintw(result_win,4,1,"Press enter to continue");
   }
 //  clrtoeol();
 //  refresh();
@@ -194,67 +236,37 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
 }
 
 void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
-    int cost = 200; //(merchant->grade - 1) * 100;
-    bool bought = FALSE;
-	int rock = 1;
-	int paper = 2;
-	int scissors = 3;
+  int cost = (merchant->rockGrade - 1) * 100;
+  int rock = 1;
+  int paper = 2;
+  int scissors = 3;
+  array ownedWepons[3];
 
-  // Put weapons for player in an array
-
-  // Put weapons for merchant in an array
-
-  // Display the players weapons
-
-  // Dislpay the merchant's weapons
-    
-  // Display question to user asking if they would like to buy anything
-    mvwprintw(result_win,0,0, "Are you here to buy or waste my time?");
-  // Get user input
-
-  // Begin while loop while user input is y
-
-  // Ask user what they would like to buy
-    mvwprintw(result_win,0,0, "Select anything anything you'd like");
-  // Get user input
+  // player wepons
+  ownedWepons[0] = player->rockName;
+  ownedWepons[1] = player->paperName;
+  ownedWepons[2] = player->scissorsName;
+//check grade if wepon is weaker dont allow them to buy
 
   // Compare items cost to the money the user has
-    if (cost > player->money) {
-      mvwprintw(result_win,0,0, "Do I look like the charitable type to you? Don't come back without a bigger wallet.");
+  if (cost > player->money) {
+    mvwprintw(result_win,1,1, "Do I look like the charitable type to you? Don't come back without a bigger wallet.");
+  } else {
+    mvwprintw(result_win,1,1, "Excellent choice, that should help you beat the others.");
+    player->money - cost;
+    bought = TRUE;
+    if (choice == rock) {
+      player->rockGrade = merchant->rockGrade;
+      player->rockName = merchant->rockName;
+    } else if (choice = paper) {
+      player->paperGrade = merchant->paperGrade;
+      player->paperName = merchant->paperName;
+    } else {
+      player->scissorsGrade = merchant->scissorsGrade;
+      player->scissorsName = merchant->scissorsName;
     }
-  // If player has enough money confirm purchase
-    else {
-      mvwprintw(result_win,0,0, "Excellent choice, that should help you beat the others.");
-        player->money - cost;
-        bought = TRUE;
-        if (choice == rock) {
-            player->rockGrade = merchant->rockGrade;
-            player->rockName = merchant->rockName;
-        } else if (choice = paper) {
-            player->paperGrade = merchant->paperGrade;
-            player->paperName = merchant->paperName;
-        } else {
-            player->scissorsGrade = merchant->scissorsGrade;
-            player->scissorsName = merchant->scissorsName;
-        }
-        //update player info on screen money and equipment
-    }
-  
-  // If player does not have enough money display error message
-
-  // If player  has enough money  confirm purchase and subtract cost of item from players purse and equip weapon
-
-  // Ask user if they would like to make another purchase
-
-  // Get user's input
-
-  // End while loop
-
-  // Display message to user indicating exiting store
-    if (bought)
-        mvwprintw(result_win,1,1, "Thanks for the money. I'll see you again");
-    else
-        mvwprintw(result_win,1,1, "Good luck winning without my help.");
+    // Update player money
+  }
 }
 
 void Interact::print_menu(WINDOW *menu_win, int highlight) {

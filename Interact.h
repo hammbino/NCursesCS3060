@@ -15,6 +15,7 @@ using namespace std;
 int tugOfWarBar = 0;
 int startx = 0;
 int starty = 0;
+bool bought = FALSE;
 
 string choices[4];
 int n_choices;

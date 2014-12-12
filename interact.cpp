@@ -170,9 +170,7 @@ void Interact::getDecision(character* person) {
     }
 
 	cin.get();
-	endwin(character_win);
-	endwin(menu_win);
-	endwin(result_win);
+	endwin();
   }
 
 

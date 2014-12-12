@@ -12,8 +12,6 @@
 // To begin running the world logic, simply call run(). This will display
 // the world in the window given.
 
-#ifndef WORLD_H_
-#define WORLD_H_
 #pragma once
 
 #include <curses.h>
@@ -41,6 +39,14 @@ class World {
         int cols, rows;
         vector<string> lines;
     };
+    // person class
+    //  represents a person on the map. could maybe be merged with
+    //  character class later but whatever.
+    class Person {
+      public:
+        int x, y;
+        int index;
+    };
     // name of the room
     string name;
     // array of tile data for the room
@@ -53,6 +59,7 @@ class World {
     // vectors containing various objects
     vector<Telep> teleps;
     vector<Sign> signs;
+    vector<Person> mapPeople;
 
     // load in a world
     void loadFile(string filename);
@@ -83,12 +90,15 @@ class World {
     // functions to check if there is some object there
     Telep* getTeleport(int x, int y);
     Sign* getSign(int x, int y);
+    Person* getPerson(int x, int y);
     // actually do teleport!
     //  unloads the current map and loads the new one, then sets the
     //  player's location.
     void doTeleport(Telep* teleport);
     // display sign message
     void doSign(Sign* sign);
+    // initiate interaction with this person
+    void doInteract(Person* person);
 
  public:
     // constants representing the types of tiles
@@ -101,6 +111,7 @@ class World {
     static const char TILE_PLAYER = 'p';
     static const char TILE_TELEP = '!';
     static const char TILE_SIGN = ':';
+    static const char TILE_PERSON = '?';
     // default world constructor
     //  creates an 8x8 closed-off room with the player inside.
     World();
@@ -119,5 +130,3 @@ class World {
     // to move their character around the screen
     void run(WINDOW* window);
 };
-
-#endif  // WORLD_H_

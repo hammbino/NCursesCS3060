@@ -1,8 +1,20 @@
 //Copyright Jeff Hammond/ Richard Larsen 2014
 
 #include "curses.h"
-#include "Interact.h"
+#include "interact.h"
+#include <stdlib.h>
 #include <sstream>
+#include <iostream>
+
+using namespace std;
+
+int tugOfWarBar = 0;
+int startx = 0;
+int starty = 0;
+bool bought = FALSE;
+
+string choices[4];
+int n_choices;
 
 void Interact::getDecision(character* person) {
   setOptions(person);

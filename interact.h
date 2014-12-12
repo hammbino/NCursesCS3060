@@ -1,5 +1,7 @@
 //Copyright Jeff Hammond/ Richard Larsen 2014
 
+#pragma once
+
 #include "curses.h"
 #include "character.h"
 #include <sstream>
@@ -12,13 +14,13 @@ using namespace std;
 #define RESULT_WIDTH 80
 #define RESULT_HEIGHT 10
 
-int tugOfWarBar = 0;
-int startx = 0;
-int starty = 0;
-bool bought = FALSE;
+extern int tugOfWarBar;
+extern int startx;
+extern int starty;
+extern bool bought;
 
-string choices[4];
-int n_choices;
+extern string choices[4];
+extern int n_choices;
 
 class Interact {
 
@@ -31,4 +33,3 @@ public:
   void print_menu(WINDOW *menu_win, int highlight);
   void print_results(WINDOW *result_win, character*);
 };
-

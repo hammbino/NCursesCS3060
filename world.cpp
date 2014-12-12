@@ -1,6 +1,8 @@
 // Copyright 2014 nigel nelson
 
 #include "./world.h"
+#include "./interact.h"
+#include "./character.h"
 #include <string.h>
 #include <time.h>
 #include <math.h>
@@ -62,6 +64,7 @@ void World::loadFile(string filename) {
   // load in the rows, line by line
   int numTeleps = 0;
   int numSigns = 0;
+  int numPeople = 0;
   for (int r = 0; r < rows; ++r) {
     string line;
     getline(fs, line);
@@ -79,6 +82,9 @@ void World::loadFile(string filename) {
           break;
         case World::TILE_SIGN:
           ++numSigns;
+          break;
+        case World::TILE_PERSON:
+          ++numPeople;
           break;
       }
     }
@@ -120,12 +126,23 @@ void World::loadFile(string filename) {
     delete[] line;
     signs.push_back(t);
   }
+  for (int i = 0; i < numPeople; ++i) {
+    Person t;
+    fs >> t.x;
+    fs.ignore(1);
+    fs >> t.y;
+    fs.ignore(1);
+    fs >> t.index;
+    fs.ignore(1);
+    mapPeople.push_back(t);
+  }
 }
 
 void World::changeFile(string filename) {
   delete[] this->tiles;
   teleps.clear();
   signs.clear();
+  mapPeople.clear();
   this->loadFile(filename);
 }
 
@@ -168,7 +185,7 @@ void World::run(WINDOW* win) {
 
 int World::act(int key) {
   // quitting the game?
-  if (key == 113) {
+  if (key == 'q') {
     return 0;
   }
 
@@ -190,12 +207,16 @@ int World::act(int key) {
 
   Telep* tp;
   Sign* sg;
+  Person* pp;
   // teleport?
   if ((tp = this->getTeleport(toX, toY)) != NULL)
     this->doTeleport(tp);
   // sign?
   else if ((sg = this->getSign(toX, toY)) != NULL)
     this->doSign(sg);
+  // person?
+  else if((pp = this->getPerson(toX, toY)) != NULL)
+    this->doInteract(pp);
   // otherwise just move.
   else if (passable(tileAt(toX, toY)))
     this->movePlayerTo(toX, toY);
@@ -257,6 +278,14 @@ World::Sign* World::getSign(int x, int y) {
   return NULL;
 }
 
+World::Person* World::getPerson(int x, int y) {
+  for (int i = 0; i < mapPeople.size(); ++i) {
+    if (mapPeople[i].x == x && mapPeople[i].y == y)
+      return &mapPeople[i];
+  }
+  return NULL;
+}
+
 void World::doTeleport(Telep* t) {
   int x = t->toX;
   int y = t->toY;
@@ -282,6 +311,11 @@ void World::doSign(Sign* t) {
   getch();
   // done. kill window
   delwin(win);
+}
+
+void World::doInteract(Person* p) {
+    Interact interact;
+    interact.getDecision(people[p->index]);
 }
 
 void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {

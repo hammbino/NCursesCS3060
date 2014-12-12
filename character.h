@@ -1,8 +1,8 @@
-#include<string>
-#include<iostream>
-using namespace std;
-
 #pragma once
+
+#include<string>
+#include<vector>
+using namespace std;
 
 class character {
 public:
@@ -22,30 +22,7 @@ public:
   
 };
 
-character::character() {
-  rockGrade = 0;
-  paperGrade = 0;
-  scissorsGrade = 0;
-  money = 0;
-  type = "";
-  name = "";
-  rockName = "";
-  paperName = "";
-  scissorsName = "";
-  encounterDone = 0;
-}
+void populateCharacters(vector<character*> &people);
 
-character::character(int rg, int pg, int sg, int m, string t, string n, string rn, string pn, string sn, int ed) {
-  rockGrade = rg;
-  paperGrade = pg;
-  scissorsGrade = sg;
-  money = m;
-  type = t;
-  name = n;
-  rockName = rn;
-  paperName = pn;
-  scissorsName = sn;
-  encounterDone = ed;
-}
-
-
+extern character* player; 
+extern vector<character*> people;

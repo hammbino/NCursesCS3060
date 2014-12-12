@@ -1,4 +1,5 @@
 #include<string>
+#include<iostream>
 using namespace std;
 
 #pragma once
@@ -8,6 +9,7 @@ public:
   int rockGrade;
   int paperGrade;
   int scissorsGrade;
+  int money;
   string type;
   string name;
   string rockName;
@@ -16,7 +18,7 @@ public:
   int encounterDone;
 
   character(void);
-  character(int rg, int pg, int sg, string t, string n, string rn, string pn, string sn, int ed);
+  character(int rg, int pg, int sg, int m, string t, string n, string rn, string pn, string sn, int ed);
   
 };
 
@@ -24,6 +26,7 @@ character::character() {
   rockGrade = 0;
   paperGrade = 0;
   scissorsGrade = 0;
+  money = 0;
   type = "";
   name = "";
   rockName = "";
@@ -32,10 +35,11 @@ character::character() {
   encounterDone = 0;
 }
 
-character::character(int rg, int pg, int sg, string t, string n, string rn, string pn, string sn, int ed) {
+character::character(int rg, int pg, int sg, int m, string t, string n, string rn, string pn, string sn, int ed) {
   rockGrade = rg;
   paperGrade = pg;
   scissorsGrade = sg;
+  money = m;
   type = t;
   name = n;
   rockName = rn;

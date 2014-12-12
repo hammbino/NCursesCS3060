@@ -140,13 +140,7 @@ void Interact::getDecision(character* person) {
       mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!\n\n\n");
       wrefresh(result_win);
     }
-	mvwprintw(result_win,4,1,"Press c to continue\n");
-	wclear(menu_win);
-	wrefresh(result_win);
-
-	while (c != 'c') { 
-	  c = wgetch(result_win);
-    }
+	cin.get();
   }
 
 

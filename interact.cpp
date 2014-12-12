@@ -39,8 +39,13 @@ void Interact::getDecision(character* person) {
   //startx = (winwidth - MENU_WIDTH);
   //starty = (winheight - MENU_HEIGHT);
 
-  startx = (winwidth - winwidth * .2);
-  starty = (winheight - winheight * .25);
+  startx = (winwidth * .25);
+  starty = (winheight * .1);
+  character_win = newwin(winheight * .4, winwidth * .5, startx, starty);
+  print_character(character_win);
+
+  startx = (winwidth * .8);
+  starty = (winheight * .75);
 
   menu_win = newwin(winheight - starty, winwidth - startx, starty, startx);
   startx = (winwidth - winwidth * .99);
@@ -331,7 +336,7 @@ void Interact::print_results(WINDOW *result_win, character* person) {
   wrefresh(result_win);
 }
 
-void Interact::print_character(WINDOW *character_win, character* person) {
+void Interact::print_character(WINDOW *character_win) {
   box(character_win,0,0);
   // NEED HELP TO PRINT TEXT FILE
   //mvwprintw(character_win, 1, 1, ); 

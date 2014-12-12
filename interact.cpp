@@ -41,7 +41,7 @@ void Interact::getDecision(character* person) {
 
   startx = (winwidth * .25);
   starty = (winheight * .1);
-  character_win = newwin(winheight * .4, winwidth * .5, startx, starty);
+  character_win = newwin(winheight * .4, winwidth * .5, starty, startx);
   print_character(character_win);
 
   startx = (winwidth * .8);

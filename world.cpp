@@ -171,13 +171,16 @@ void World::run(WINDOW* win) {
     // clear out the rest of the buffer
     while (getch() != ERR) continue;
     // frame action
-    int donext = this->act(input);
+    int actresult = this->act(input);
+    if (actresult == -1) break;
     // draw the things
-    wclear(win);
-    this->drawWorld(win);
-    this->drawHUD(hud);
-    // do next frame?
-    if (!donext) break;
+    this->drawWorld(win, actresult > 0);
+    /* no hud for now. I'll make it work later.
+     * 
+    if (actresult == 2)
+      this->drawHUD(hud);
+    wrefresh(hud);
+    */
     // wait
     nanosleep(&sleeptime, &notused);
   }
@@ -186,7 +189,7 @@ void World::run(WINDOW* win) {
 int World::act(int key) {
   // quitting the game?
   if (key == 'q') {
-    return 0;
+    return -1;
   }
 
   // moving?
@@ -200,61 +203,83 @@ int World::act(int key) {
     ++toY;
   else if (key == KEY_UP || key == 'w' || key == 'k')
     --toY;
-  // if it's neither of those, just return.
+  // if didn't move, return 0 to indicate no movement
   else
-    return 1;
+    return 0;
   // if it is... let's move!
 
   Telep* tp;
   Sign* sg;
   Person* pp;
-  // teleport?
-  if ((tp = this->getTeleport(toX, toY)) != NULL)
+  if ((tp = this->getTeleport(toX, toY)) != NULL) {
+    // teleport?
     this->doTeleport(tp);
-  // sign?
-  else if ((sg = this->getSign(toX, toY)) != NULL)
+    return 2;
+  } else if ((sg = this->getSign(toX, toY)) != NULL) {
+    // sign?
     this->doSign(sg);
-  // person?
-  else if((pp = this->getPerson(toX, toY)) != NULL)
+    return 1;
+  } else if((pp = this->getPerson(toX, toY)) != NULL) {
+    // person?
     this->doInteract(pp);
-  // otherwise just move.
-  else if (passable(tileAt(toX, toY)))
+    return 2;
+  } else if (passable(tileAt(toX, toY))) {
+    // can move here?
     this->movePlayerTo(toX, toY);
-
-  // return 1 to continue running
-  return 1;
+    return 1;
+  } else {
+    // tried to move but can't
+    return 0;
+  }
 }
 
-void World::drawWorld(WINDOW* win) {
+void World::drawWorld(WINDOW* win, bool moved) {
   // frame number
   static int frame = -1;
   ++frame;
+  // compare window width and height
+  static int lastwidth = 0, lastheight = 0;
+  int winwidth, winheight;
+  getmaxyx(win, winheight, winwidth);
+
+  // clear and redraw if moved or resized
+  bool redraw = moved || lastwidth != winwidth || lastheight != winheight;
+  if (redraw) {
+    wclear(win);
+  }
+
+  // store new window size
+  lastwidth = winwidth;
+  lastheight = winheight;
 
   // hide cursor
   curs_set(0);
 
   // draw what we can see of the map
-  int winwidth, winheight;
-  getmaxyx(win, winheight, winwidth);
   int radx = (winwidth / 5 - 1) / 2;
   int rady = (winheight / 3 - 1) / 2;
   int offx = (winwidth - (radx * 2 + 1) * 5) / 2;
   int offy = (winheight - (rady * 2 + 1) * 3) / 2;
+  bool change = false;
   for (int r = this->playerY - rady; r <= this->playerY + rady; ++r) {
     for (int c = this->playerX - radx; c <= this->playerX + radx; ++c) {
       int cx = (c - this->playerX + radx) * 5 + offx;
       int cy = (r - this->playerY + rady) * 3 + offy;
       if (r < 0 || r >= this->rows || c < 0 || c >= this->cols)
-        drawTile(this->outTile, win, cx, cy, frame);
+        change = drawTile(this->outTile, win, cx, cy, redraw, frame)
+          || change;
       else if (r == this->playerY && c == this->playerX)
-        drawTile(World::TILE_PLAYER, win, cx, cy, frame);
+        change = drawTile(World::TILE_PLAYER, win, cx, cy, redraw, frame)
+          || change;
       else
-        drawTile(this->tileAt(c, r), win, cx, cy, frame);
+        change = drawTile(this->tileAt(c, r), win, cx, cy, redraw, frame)
+          || change;
     }
   }
 
   // output everything to the screen
-  wrefresh(win);
+  if (change)
+    wrefresh(win);
 }
 
 bool World::passable(char t) {
@@ -314,25 +339,29 @@ void World::doSign(Sign* t) {
 }
 
 void World::doInteract(Person* p) {
-    Interact interact;
-    interact.getDecision(people[p->index]);
+  Interact interact;
+  interact.getDecision(people[p->index]);
 }
 
-void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
-  // no floor
+bool World::drawTile(char tile, WINDOW* win, int x, int y,
+    bool moved, int frame) {
   if (tile == World::TILE_FLOOR) {
+    return false;
   } else if (tile == World::TILE_WALL) {
+    if (!moved) return false;
     wattrset(win, COLOR_PAIR(2) | A_REVERSE);
     mvwaddstr(win, y + 0, x, "|__|_");
     mvwaddstr(win, y + 1, x, "_|__|");
     mvwaddstr(win, y + 2, x, "|_|__");
   } else if (tile == World::TILE_TREE) {
+    if (!moved) return false;
     wattrset(win, COLOR_PAIR(3) | A_REVERSE);
     mvwaddstr(win, y + 0, x + 1, "/\\");
     mvwaddstr(win, y + 1, x, "//\\\\");
     wattrset(win, COLOR_PAIR(5));
     mvwaddstr(win, y + 2, x + 1, "##");
   } else if (tile == World::TILE_WATER) {
+    if (!moved && frame % 4 != 0) return false;
     static string water = "~   ~   ~   ~   ~   ";
     wattrset(win, COLOR_PAIR(7) | A_REVERSE);
     for (int i = 0; i < 3; ++i) {
@@ -340,15 +369,20 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
       mvwaddstr(win, y + i, x, water.substr(pos, 5).c_str());
     }
   } else if (tile == World::TILE_STAIRS) {
+    if (!moved) return false;
     wattrset(win, A_REVERSE);
     mvwaddstr(win, y + 0, x + 4, "_");
     mvwaddstr(win, y + 1, x + 2, "___");
     mvwaddstr(win, y + 2, x, "     ");
   } else if (tile == World::TILE_SIGN) {
+    if (!moved) return false;
     wattrset(win, COLOR_PAIR(3));
     mvwaddstr(win, y + 0, x, "+---+");
     mvwaddstr(win, y + 1, x, "|AAA|");
     mvwaddstr(win, y + 2, x, " _|_ ");
+  } else if (tile == World::TILE_FAULTROCK) {
+    if (!moved) return false;
+    
   } else if (tile == World::TILE_PLAYER) {
     int color = frame % 6 + 2;
     wattrset(win, COLOR_PAIR(color));
@@ -356,11 +390,13 @@ void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
     mvwaddstr(win, y + 1, x + 1,  "+|+");
     mvwaddstr(win, y + 2, x + 1,  "/ \\");
   } else {
+    if (!moved) return false;
     wattrset(win, A_REVERSE);
     for (int c = 0; c < 5; ++c)
       for (int r = 0; r < 3; ++r)
         mvwaddch(win, y + r, x + c, tile);
   }
+  return true;
 }
 
 void World::drawHUD(WINDOW* win) {
@@ -370,5 +406,4 @@ void World::drawHUD(WINDOW* win) {
   wattron(win, COLOR_PAIR(5));
   wborder(win, '|', '|', '-', '_', '+', '+', 'L', 'J');
   mvwprintw(win, 2, 2, "\"%s\"", this->name.c_str());
-  wrefresh(win);
 }

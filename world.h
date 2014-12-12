@@ -71,7 +71,7 @@ class World {
     int act(int key);
     // draw the world in its current state. called by run().
     //  will draw as many tiles as possible in the given window.
-    void drawWorld(WINDOW* window);
+    void drawWorld(WINDOW* window, bool moved);
     // draw the HUD at the top of the screen. called by run().
     //  will draw into the window specified.
     void drawHUD(WINDOW* window);
@@ -82,9 +82,14 @@ class World {
     //  window: the window to draw the tile in
     //  x: the leftmost column the tile will occupy
     //  y: the topmost row the tile will occupy
+    //  redraw: if the whole screen is being redrawn. some tiles
+    //    will update themselves periodically, but most only need
+    //    to be drawn once the screen has moved. this lets them know
+    //    that happened.
     //  frame: how many frames have been executed by doFrame. can be
     //    used to animate a tile.
-    void drawTile(char tile, WINDOW* window, int x, int y, int frame);
+    bool drawTile(char tile, WINDOW* window, int x, int y,
+        bool redraw, int frame);
     // is the player able to pass over this kind of tile?
     bool passable(char tile);
     // functions to check if there is some object there
@@ -108,6 +113,8 @@ class World {
     static const char TILE_WATER = '~';
     static const char TILE_GRASS = ',';
     static const char TILE_STAIRS = '/';
+    static const char TILE_FAULTROCK = 'R';
+    // constants for object-ish tiles
     static const char TILE_PLAYER = 'p';
     static const char TILE_TELEP = '!';
     static const char TILE_SIGN = ':';

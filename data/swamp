@@ -7,7 +7,7 @@ TTTTTTT                                        T
 TTTT XXXXXXXX                                  T
 TT   X     !X                                  T
 T  ~ X ?    X                                  T
-T T~~X      X                                  T
+T T~~X    ? X                                  T
 T ~~~XXX  XXX                                  T
 T ~ ~XXX  XXX                                  T
 T   ~~T    :  T                                T
@@ -46,3 +46,4 @@ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 12 13 : 32 1
 Nothing interesting to see here.
 7 4 1
+10 5 2

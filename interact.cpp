@@ -58,15 +58,13 @@ void Interact::getDecision(character* person) {
   //refresh();
 
   print_results(result_win, person);
-  //*************
-  //What does this do
+
   if (person->encounterDone > 0) {
     //No introduction
     if (person->type == "Professor") {
 	  // This is Prof. Wright. Fight him the 2nd time
 	   } else if (person->type == "Student") {
       // If an enemy, display beaten message
-
       return;
     }
   }
@@ -170,7 +168,11 @@ void Interact::getDecision(character* person) {
       box(result_win,0,0);
       wrefresh(result_win);
     }
+
 	cin.get();
+	endwin(character_win);
+	endwin(menu_win);
+	endwin(result_win);
   }
 
 

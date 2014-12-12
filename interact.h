@@ -30,7 +30,7 @@ public:
   void fight(WINDOW*, character*, int);
   void buy(WINDOW*, character*, int);
   void getDecision(character*);
-  void print_character(WINDOW *character_win);
+  void print_character(WINDOW *character_win, character* person);
   void print_menu(WINDOW *menu_win, int highlight);
   void print_results(WINDOW *result_win, character*);
 };

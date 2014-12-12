@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <sstream>
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -41,7 +42,7 @@ void Interact::getDecision(character* person) {
   startx = (winwidth * .25);
   starty = (winheight * .1);
   character_win = newwin(winheight * .4, winwidth * .5, starty, startx);
-  print_character(character_win);
+  print_character(character_win, person);
 
   startx = (winwidth * .8);
   starty = (winheight * .75);
@@ -336,10 +337,25 @@ void Interact::print_results(WINDOW *result_win, character* person) {
   wrefresh(result_win);
 }
 
-void Interact::print_character(WINDOW *character_win) {
+void Interact::print_character(WINDOW *character_win, character* person) {
+  //get name of charcater
+  //append .txt to the chacarter name
+  int x = 1, y = 1;
+  string line;
+  string charImage = person->name + ".txt";
+  //declare a file name
+  ifstream ci(charImage);
+  //open the file
+  if (!ci.good()) throw "failed to open character image file";
+  while(ci)  {
+    getline (ci, line);
+    mvwprintw(character_win, y, x, "%s\n", line.c_str());
+    ++y;
+  }  
+//open the file
+//while not the end of file read a line and display in the window
+//when end of close the file 
   box(character_win,0,0);
-  // NEED HELP TO PRINT TEXT FILE
-  //mvwprintw(character_win, 1, 1, ); 
   wrefresh(character_win);
 }
 

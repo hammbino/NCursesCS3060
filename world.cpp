@@ -1,11 +1,15 @@
 // Copyright 2014 nigel nelson
 
-#include <fstream>
+#include "./world.h"
 #include <string.h>
 #include <time.h>
 #include <math.h>
-#include "world.h"
-using namespace std;
+#include <fstream>
+#include <string>
+
+using std::string;
+using std::vector;
+using std::ifstream;
 
 World::World() {
   this->name = "Default Room";
@@ -40,7 +44,7 @@ World::~World() {
 void World::loadFile(string filename) {
   // open stream
   ifstream fs(filename.c_str());
-  if(!fs.good()) throw "failed to open world file.";
+  if (!fs.good()) throw "failed to open world file.";
   // read in the name and size from first 3 lines
   getline(fs, this->name);
   fs >> this->cols;
@@ -58,14 +62,14 @@ void World::loadFile(string filename) {
   // load in the rows, line by line
   int numTeleps = 0;
   int numSigns = 0;
-  for(int r = 0; r < rows; ++r) {
+  for (int r = 0; r < rows; ++r) {
     string line;
     getline(fs, line);
     strncpy(this->tiles + (r * this->cols), line.c_str(), this->cols);
     // see if the player's location was declared in this line
     // or if there's a teleport we need to keep track of
     for (int c = 0; c < cols; ++c) {
-      switch(line.at(c)) {
+      switch (line.at(c)) {
         case World::TILE_PLAYER:
           this->movePlayerTo(c, r);
           this->tiles[(r * this->cols) + c] = World::TILE_FLOOR;
@@ -79,7 +83,7 @@ void World::loadFile(string filename) {
       }
     }
   }
-  //read in all teleports now
+  // read in all teleports now
   for (int i = 0; i < numTeleps; ++i) {
     Telep t;
     fs >> t.x;
@@ -109,7 +113,7 @@ void World::loadFile(string filename) {
     fs >> t.rows;
     fs.ignore(1);
     char* line = new char[t.cols + 1];
-    for(int i = 0; i < t.rows; ++i) {
+    for (int i = 0; i < t.rows; ++i) {
       fs.getline(line, t.cols + 1);
       t.lines.push_back(string(line));
     }
@@ -180,25 +184,21 @@ int World::act(int key) {
   else if (key == KEY_UP || key == 'w' || key == 'k')
     --toY;
   // if it's neither of those, just return.
-  else {
+  else
     return 1;
-  }
   // if it is... let's move!
 
   Telep* tp;
   Sign* sg;
   // teleport?
-  if ((tp = this->getTeleport(toX, toY)) != NULL) {
+  if ((tp = this->getTeleport(toX, toY)) != NULL)
     this->doTeleport(tp);
-  }
   // sign?
-  else if((sg = this->getSign(toX, toY)) != NULL) {
+  else if ((sg = this->getSign(toX, toY)) != NULL)
     this->doSign(sg);
-  }
   // otherwise just move.
-  else if (passable(tileAt(toX, toY))) {
+  else if (passable(tileAt(toX, toY)))
     this->movePlayerTo(toX, toY);
-  }
 
   // return 1 to continue running
   return 1;
@@ -223,9 +223,9 @@ void World::drawWorld(WINDOW* win) {
     for (int c = this->playerX - radx; c <= this->playerX + radx; ++c) {
       int cx = (c - this->playerX + radx) * 5 + offx;
       int cy = (r - this->playerY + rady) * 3 + offy;
-      if(r < 0 || r >= this->rows || c < 0 || c >= this->cols)
+      if (r < 0 || r >= this->rows || c < 0 || c >= this->cols)
         drawTile(this->outTile, win, cx, cy, frame);
-      else if(r == this->playerY && c == this->playerX)
+      else if (r == this->playerY && c == this->playerX)
         drawTile(World::TILE_PLAYER, win, cx, cy, frame);
       else
         drawTile(this->tileAt(c, r), win, cx, cy, frame);
@@ -242,16 +242,16 @@ bool World::passable(char t) {
 }
 
 World::Telep* World::getTeleport(int x, int y) {
-  for(int i = 0; i < teleps.size(); ++i) {
-    if(teleps[i].x == x && teleps[i].y == y)
+  for (int i = 0; i < teleps.size(); ++i) {
+    if (teleps[i].x == x && teleps[i].y == y)
       return &teleps[i];
   }
   return NULL;
 }
 
 World::Sign* World::getSign(int x, int y) {
-  for(int i = 0; i < signs.size(); ++i) {
-    if(signs[i].x == x && signs[i].y == y)
+  for (int i = 0; i < signs.size(); ++i) {
+    if (signs[i].x == x && signs[i].y == y)
       return &signs[i];
   }
   return NULL;
@@ -273,7 +273,7 @@ void World::doSign(Sign* t) {
   WINDOW* win = newwin(t->rows + 2, t->cols + 4,
     (y - t->rows - 2) / 2, (x - t->cols - 4) / 2);
   wborder(win, '{', '}', '~', '~', '#', '#', '#', '#');
-  for(int i = 0; i < t->rows; ++i) {
+  for (int i = 0; i < t->rows; ++i) {
     mvwprintw(win, i + 1, 2, t->lines[i].c_str());
   }
   wrefresh(win);
@@ -287,58 +287,44 @@ void World::doSign(Sign* t) {
 void World::drawTile(char tile, WINDOW* win, int x, int y, int frame) {
   // no floor
   if (tile == World::TILE_FLOOR) {
-  }
-  // nice brick wall
-  else if (tile == World::TILE_WALL) {
+  } else if (tile == World::TILE_WALL) {
     wattrset(win, COLOR_PAIR(2) | A_REVERSE);
     mvwaddstr(win, y + 0, x, "|__|_");
     mvwaddstr(win, y + 1, x, "_|__|");
     mvwaddstr(win, y + 2, x, "|_|__");
-  }
-  // trees!
-  else if (tile == World::TILE_TREE) {
+  } else if (tile == World::TILE_TREE) {
     wattrset(win, COLOR_PAIR(3) | A_REVERSE);
     mvwaddstr(win, y + 0, x + 1, "/\\");
     mvwaddstr(win, y + 1, x, "//\\\\");
     wattrset(win, COLOR_PAIR(5));
     mvwaddstr(win, y + 2, x + 1, "##");
-  }
-  // water
-  else if(tile == World::TILE_WATER) {
+  } else if (tile == World::TILE_WATER) {
     static string water = "~   ~   ~   ~   ~   ";
     wattrset(win, COLOR_PAIR(7) | A_REVERSE);
     for (int i = 0; i < 3; ++i) {
       int pos = 10 + (frame/4 + y + x + i)%4 * (((y + i) % 2)? -1 : 1);
       mvwaddstr(win, y + i, x, water.substr(pos, 5).c_str());
     }
-  }
-  // stairs
-  else if(tile == World::TILE_STAIRS) {
+  } else if (tile == World::TILE_STAIRS) {
     wattrset(win, A_REVERSE);
     mvwaddstr(win, y + 0, x + 4, "_");
     mvwaddstr(win, y + 1, x + 2, "___");
     mvwaddstr(win, y + 2, x, "     ");
-  }
-  // signs
-  else if(tile == World::TILE_SIGN) {
+  } else if (tile == World::TILE_SIGN) {
     wattrset(win, COLOR_PAIR(3));
     mvwaddstr(win, y + 0, x, "+---+");
     mvwaddstr(win, y + 1, x, "|AAA|");
     mvwaddstr(win, y + 2, x, " _|_ ");
-  }
-  // the player
-  else if (tile == World::TILE_PLAYER) {
+  } else if (tile == World::TILE_PLAYER) {
     int color = frame % 6 + 2;
     wattrset(win, COLOR_PAIR(color));
     mvwaddstr(win, y + 0, x + 1,  " 0 ");
     mvwaddstr(win, y + 1, x + 1,  "+|+");
     mvwaddstr(win, y + 2, x + 1,  "/ \\");
-  }
-  // by default, just draw the character. basically, a shrug
-  else {
+  } else {
     wattrset(win, A_REVERSE);
-    for(int c = 0; c < 5; ++c)
-      for(int r = 0; r < 3; ++r)
+    for (int c = 0; c < 5; ++c)
+      for (int r = 0; r < 3; ++r)
         mvwaddch(win, y + r, x + c, tile);
   }
 }

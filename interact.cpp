@@ -340,18 +340,25 @@ void Interact::print_results(WINDOW *result_win, character* person) {
 void Interact::print_character(WINDOW *character_win, character* person) {
   //get name of charcater
   //append .txt to the chacarter name
-  int x = 1, y = 1;
-  string line;
-  string charImage = person->name + ".txt";
-  //declare a file name
-  ifstream ci(charImage);
-  //open the file
-  if (!ci.good()) throw "failed to open character image file";
-  while(ci)  {
-    getline (ci, line);
-    mvwprintw(character_win, y, x, "%s\n", line.c_str());
-    ++y;
-  }  
+//   int x = 1, y = 1;
+//   string line;
+//   string charImage = "images/"+ person->name + ".txt";
+//   //declare a file name
+//   ifstream ci(charImage);
+//   //open the file
+//   if (!ci.good()) {
+//     throw "failed to open character image file";
+//     wprintw(character_win, "Could not open character file");
+//     box(character_win,0,0);
+//     wrefresh(character_win);
+//     return void();
+// }
+
+//   while(!ci.eof())  {
+//     getline (ci, line);
+//     mvwprintw(character_win, y, x, "%s\n", line.c_str());
+//     ++y;
+//   }  
 //open the file
 //while not the end of file read a line and display in the window
 //when end of close the file 

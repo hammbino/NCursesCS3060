@@ -193,6 +193,12 @@ int World::act(int key) {
   if (key == 'q') {
     return -1;
   }
+  // show menu?
+  if (key == 'e') {
+    Interact i;
+    i.showStat();
+    return 2;
+  }
 
   // moving?
   int toX = this->playerX;

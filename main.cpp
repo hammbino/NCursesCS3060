@@ -33,9 +33,9 @@ int main(void) {
   // create player & other characters
   player = new character(1,1,1,100,"Player","You","Pebble","Recycled Paper","Safety Scissors", 0);
   populateCharacters(people);
-    Interact firstInteraction;
-    firstInteraction.firstFight(people[0]);
-    firstInteraction.firstFight(people[31]);
+  Interact firstInteraction;
+  firstInteraction.firstFight(people[0]);
+  firstInteraction.firstFight(people[31]);
   // create world and run it
   World w("data/home");
   w.run(mainwin);

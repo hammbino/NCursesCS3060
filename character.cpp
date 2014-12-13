@@ -64,4 +64,7 @@ void populateCharacters(vector<character*> &people) {
   people.push_back(new character(4,4,4,0,"Vendor","Sneaky Seth","Granite","Vinyl","Exact-o Knife", 0));
   people.push_back(new character(5,5,5,0,"Vendor","Shifty Sheldon","Obsidian","Plywood","Hedge Trimmers", 0));
   people.push_back(new character(6,6,6,0,"Vendor","Trafficing Trevor","Diamond","Steel Sheet","Steel Snips", 0));
+  people.push_back(new character(0,0,0,0,"Angel","Prof. Wright's Wife","Cloud","Heart","Flower", 0));
+
+
 }

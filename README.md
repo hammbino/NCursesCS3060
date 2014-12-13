@@ -1,4 +1,4 @@
 NCursesCS3060
 =============
 
-Joe, Ricky, Nigel, Jeff
+Jo(Josiah) Reeder, Ricky(Richard) Larsen, Nigel Nelson, Jeff Hammond

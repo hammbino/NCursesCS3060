@@ -583,7 +583,7 @@ void Interact::battleBar(int points) {
   wrefresh(war_win);
 }
 
-void Interact::showStat (character* player) {
+void Interact::showStat () {
   WINDOW *stat_win; 
   int statY, statX, winHeight, winWidth;
   initscr();

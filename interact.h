@@ -33,4 +33,5 @@ public:
   void print_character(WINDOW *character_win, character* person);
   void print_menu(WINDOW *menu_win, int highlight);
   void print_results(WINDOW *result_win, character*);
+  void firstFight(character* person);
 };

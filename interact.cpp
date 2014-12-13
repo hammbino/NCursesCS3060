@@ -348,7 +348,7 @@ void Interact::print_character(WINDOW *character_win, character* person) {
   //append .txt to the chacarter name
   int x = 1, y = 1;
   string line;
-  string charImage = "images/"+ person->name + ".txt";
+  string charImage = person->name + ".txt";
   //declare a file name
   ifstream ci(charImage);
   //open the file
@@ -360,6 +360,7 @@ void Interact::print_character(WINDOW *character_win, character* person) {
       } 
   } else { 
     mvwprintw(character_win, y, x, "Could not open file");
+    mvwprintw(character_win, 2, x, "%s\n", charImage.c_str());
     }
   ci.close();
 //open the file

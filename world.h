@@ -131,6 +131,7 @@ class World {
     static const char TILE_PERSON = '>';
     static const char TILE_FRIENDLY = '?';
     static const char TILE_VENDOR = '$';
+    static const char TILE_WRIGHT = 'w';
     // default world constructor
     //  creates an 8x8 closed-off room with the player inside.
     World();

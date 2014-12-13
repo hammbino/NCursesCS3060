@@ -172,7 +172,7 @@ void Interact::getDecision(character* person) {
       person->encounterDone++;
       mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
       int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
-      reward = reward * 35;
+      reward = reward * 38;
       player->money = player->money + reward;
       mvwprintw(result_win,3,1,"You won $%d.", reward); 
       box(result_win,0,0);

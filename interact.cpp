@@ -638,12 +638,14 @@ void Interact::showStat () {
   noecho();
   cbreak();
   getmaxyx(stdscr, winHeight, winWidth);
-  statY = (winHeight * .99);
-  statX = (winWidth * .75);
-  stat_win = newwin(winHeight * .1, winWidth * .3, statY, statX);
+  statY = (winHeight * .01);
+  statX = (winWidth * .01);
+  stat_win = newwin(winHeight * .4, winWidth * .3, statY, statX);
   mvwprintw(stat_win,1,1, "%d %s\n", player->rockGrade, player->rockName.c_str());
   mvwprintw(stat_win,2,1, "%d %s\n", player->paperGrade, player->paperName.c_str());
   mvwprintw(stat_win,3,1, "%d %s\n", player->scissorsGrade, player->scissorsName.c_str());
+  mvwprintw(stat_win,4,1, "$%d\n", player->money);
+  box(stat_win,0,0);
   wrefresh(stat_win);
   wgetch(stat_win);
   endwin();

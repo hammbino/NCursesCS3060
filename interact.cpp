@@ -476,8 +476,8 @@ void Interact::firstFight(character* person) {
   getmaxyx(stdscr, winheight, winwidth);
 
   startx = (winwidth * .25);
-  starty = (winheight * .1);
-  character_win = newwin(winheight * .5, winwidth * .45, starty, startx);
+  starty = (winheight * .05);
+  character_win = newwin(winheight * .7, winwidth * .45, starty, startx);
   print_character(character_win, person);
 
   startx = (winwidth * .8);

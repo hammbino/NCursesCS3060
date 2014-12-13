@@ -41,7 +41,7 @@ void Interact::getDecision(character* person) {
 
   startx = (winwidth * .25);
   starty = (winheight * .1);
-  character_win = newwin(winheight * .4, winwidth * .5, starty, startx);
+  character_win = newwin(winheight * .5, winwidth * .45, starty, startx);
   print_character(character_win, person);
 
   startx = (winwidth * .8);
@@ -278,6 +278,17 @@ void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
   int paper = 2;
   int scissors = 3;
   string ownedWeapons[3];
+  if (player->rockGrade >= merchant->rockGrade && choice == rock) {
+    return;
+  }
+  if (player->paperGrade >= merchant->paperGrade && choice == paper) {
+    return;
+  }
+  if (player->scissorsGrade >= merchant->scissorsGrade && choice == scissors) {
+    return;
+  }
+
+
 
   // player weapons
   ownedWeapons[0] = player->rockName;
@@ -352,7 +363,7 @@ void Interact::print_character(WINDOW *character_win, character* person) {
   string line;
   string charImage = "images/" + person->name + ".txt";
   //declare a file name
-  ifstream ci(charImage);
+  ifstream ci(charImage.c_str());
   //open the file
   if (ci.is_open()){
     while(ci.good())  {
@@ -363,7 +374,7 @@ void Interact::print_character(WINDOW *character_win, character* person) {
   } else { 
     mvwprintw(character_win, y, x, "Could not open file");
     mvwprintw(character_win, 2, x, "%s\n", charImage.c_str());
-    }
+  }
   ci.close();
 //open the file
 //while not the end of file read a line and display in the window

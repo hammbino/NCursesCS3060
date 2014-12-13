@@ -30,7 +30,7 @@ int main(void) {
   init_pair(7, COLOR_MAGENTA, COLOR_BLACK);
 
   // create player & other characters
-  player = new character(1,1,1,50,"Player","You","Pebble","Recycled Paper","Safety Scissors", 0);
+  player = new character(1,1,1,100,"Player","You","Pebble","Recycled Paper","Safety Scissors", 0);
   populateCharacters(people);
 
   // create world and run it

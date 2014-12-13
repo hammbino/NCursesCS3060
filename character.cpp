@@ -47,9 +47,9 @@ void populateCharacters(vector<character*> &people) {
   people.push_back(new character(2,2,2,0,"Student","Kristy","Rock","Paper","Scissors", 0));
   people.push_back(new character(2,2,2,0,"Student","Precila","Rock","Paper","Scissors", 0));
   people.push_back(new character(2,2,2,0,"Student","Hank","Rock","Paper","Scissors", 0));
-  people.push_back(new character(0,3,0,0,"Student","Sharp Shawn","Boulder","Cardboard","Cardboard Cutter", 0));
+  people.push_back(new character(0,0,3,0,"Student","Sharp Shawn","Boulder","Cardboard","Cardboard Cutter", 0));
   people.push_back(new character(3,0,0,0,"Student","Sturdy Sid","Boulder","Cardboard","Cardboard Cutter", 0));
-  people.push_back(new character(0,0,3,0,"Student","Skinny Scott","Boulder","Cardboard","Cardboard Cutter", 0));
+  people.push_back(new character(0,3,0,0,"Student","Skinny Scott","Boulder","Cardboard","Cardboard Cutter", 0));
   people.push_back(new character(3,3,3,0,"Student","Richie Rich","Boulder","Cardboard","Cardboard Cutter", 0));
   people.push_back(new character(0,0,3,0,"Student","Spikey Spike","Boulder","Cardboard","Cardboard Cutter", 0));
   people.push_back(new character(3,0,0,0,"Student","Stoney Stoner","Boulder","Cardboard","Cardboard Cutter", 0));

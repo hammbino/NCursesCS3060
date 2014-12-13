@@ -1,0 +1,88 @@
+Wolverine Village
+55
+38
+ 
+                          T!T                          
+ TTTTTTTTTTTTTTTTTTTTTTTTTToTTTTTTTTTTTTTTTTTTTTTTTTTT 
+ T.........................o.........................T 
+ T.........................o.........................T 
+ T..                       o                       ..T 
+ T..                       o                       ..T 
+ T..                      :o                       ..T 
+ T..   TTTTTTTTTTTTTTTTTT  o  TTTTTTTTTTTTTTTTTT   ..T 
+ T..   T                   o                   T   ..T 
+ T..   T                   o   XXXXXXXXXXXXXX  T   ..T 
+ T..   T                   o   X            X  T   ..T 
+ T..   T   XXXXXXXXXX      o   X       :    X  T   ..T 
+ T..   T   X        X      o   X  :         X  T   ..T 
+ T..   T   X     p  X      o   X            X  T   ..T 
+ T..   T   X        X      o   X      :     X  T   ..T 
+ T..   T   XXXX XXXXX      o   X            X  T   ..T 
+ T..   T   XXXX XXXXX      o   XXXXX    XXXXX  T   ..T 
+ T..         :    T        o   XXX:X    XXXXX      ..T 
+TT.. :                     o                    :  ..TT
+!ooooooooooooooooooooooooooooooooooooooooooooooooooooo!
+TT..                       o                       ..TT
+ T..                :      o                       ..T 
+ T..   T   ~~~~~~ ~~~~~~   o                   T   ..T 
+ T..   T   ~,,,,,,,,,,,~   o                   T   ..T 
+ T..   T   ~,,T,,T,,T,,~   o                   T   ..T 
+ T..   T    ,T,,T,T,,T,    o                   T   ..T 
+ T..   T   ~,,T,,T,,T,,~   o                   T   ..T 
+ T..   T   ~,,,,,,,,,,,~   o                   T   ..T 
+ T..   T   ~~~~~~ ~~~~~~   o                   T   ..T 
+ T..   T                   o                   T   ..T 
+ T..   TTTTTTTTTTTTTTTTTT  o  TTTTTTTTTTTTTTTTTT   ..T 
+ T..                      :o                       ..T 
+ T..                       o                       ..T 
+ T..                       o                       ..T 
+ T.........................o.........................T 
+ T.........................o.........................T 
+ TTTTTTTTTTTTTTTTTTTTTTTTTToTTTTTTTTTTTTTTTTTTTTTTTTTT 
+                          T!T                          
+0 19 o data/home 3 3
+54 19 o data/home 3 3
+27 0 o data/home 3 3
+27 37 o data/home 3 3
+13 17 : 20 3
+
+    YOUR HOUSE
+
+20 21 : 20 3
+
+     DA PARK
+
+34 17 : 20 3
+
+ COMMUNITY COLLEGE
+
+5 18 : 12 4
+
+  WORLD 1
+ <--------
+
+26 6 : 14 3
+ ^
+ | WORLD 2
+ |
+48 18 : 12 4
+
+  WORLD 3
+ -------->
+
+26 31 : 14 3
+          |
+  WORLD 4 |
+          V
+39 11 ? 26 3
+"Did you know you can
+press the E key to view
+your money and equipment?"
+38 14 ? 26 3
+"Today I learned that red
+people want to fight! But
+blue people are friendly."
+34 12 ? 26 3
+"Green people will sell
+you weapons. Better fight
+people to earn cash..."

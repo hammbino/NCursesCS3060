@@ -37,7 +37,7 @@ int main(void) {
     firstInteraction.firstFight(people[0]);
     firstInteraction.firstFight(people[31]);
   // create world and run it
-  World w("data/swamp");
+  World w("data/home");
   w.run(mainwin);
 
   // clean up and close

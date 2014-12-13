@@ -27,7 +27,7 @@ World::World() {
       // set it to a wall if it's the edge,
       // otherwise it's blank.
       *t = (r < 2 || r >= 6 || c < 2 || c >= 6) ?
-        World::TILE_WALL: World::TILE_FLOOR;
+        World::TILE_REDBRICK: World::TILE_FLOOR;
     }
   }
   // put the player in there somewhere
@@ -131,6 +131,8 @@ void World::loadFile(string filename) {
     fs >> t.x;
     fs.ignore(1);
     fs >> t.y;
+    fs.ignore(1);
+    fs.get(this->tiles[(t.y * this->cols) + t.x]);
     fs.ignore(1);
     fs >> t.index;
     fs.ignore(1);
@@ -282,9 +284,22 @@ void World::drawWorld(WINDOW* win, bool moved) {
     wrefresh(win);
 }
 
+void World::drawHUD(WINDOW* win) {
+  // using wborder instead of box, because box seems to look weird while
+  // using putty to connect to the machine remotely?? idk idk idk
+  wclear(win);
+  wattron(win, COLOR_PAIR(5));
+  wborder(win, '|', '|', '-', '_', '+', '+', 'L', 'J');
+  mvwprintw(win, 2, 2, "\"%s\"", this->name.c_str());
+}
+
 bool World::passable(char t) {
   return t == World::TILE_FLOOR ||
-    t == World::TILE_GRASS;
+    t == World::TILE_GRASS ||
+    t == World::TILE_SAND ||
+    t == World::TILE_PEBBLES ||
+    t == World::TILE_FAKEWALL ||
+    t == World::TILE_CLOUDGROUND;
 }
 
 World::Telep* World::getTeleport(int x, int y) {
@@ -347,12 +362,36 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     bool moved, int frame) {
   if (tile == World::TILE_FLOOR) {
     return false;
-  } else if (tile == World::TILE_WALL) {
+  } else if (tile == World::TILE_GRASS) {
+    if (!moved) return false;
+    wattrset(win, COLOR_PAIR(4));
+    mvwaddstr(win, y + 0, x, ", ,,,");
+    mvwaddstr(win, y + 1, x, " , ,,");
+    mvwaddstr(win, y + 2, x, ",,,, ");
+  } else if (tile == World::TILE_SAND) {
+    if (!moved) return false;
+    wattrset(win, COLOR_PAIR(3));
+    mvwaddstr(win, y + 0, x, ".  . ");
+    mvwaddstr(win, y + 1, x, " . ..");
+    mvwaddstr(win, y + 2, x, ". . .");
+  } else if (tile == World::TILE_PEBBLES) {
+    if (!moved) return false;
+    wattrset(win, 0);
+    mvwaddstr(win, y + 0, x, "o .o ");
+    mvwaddstr(win, y + 1, x, ". o .");
+    mvwaddstr(win, y + 2, x, " .  o");
+  } else if (tile == World::TILE_REDBRICK) {
     if (!moved) return false;
     wattrset(win, COLOR_PAIR(2) | A_REVERSE);
     mvwaddstr(win, y + 0, x, "|__|_");
     mvwaddstr(win, y + 1, x, "_|__|");
     mvwaddstr(win, y + 2, x, "|_|__");
+  } else if (tile == World::TILE_ROCK) {
+    if (!moved) return false;
+    wattrset(win, A_REVERSE);
+    mvwaddstr(win, y + 0, x + 1, "/.|");
+    mvwaddstr(win, y + 1, x, "/..\\");
+    mvwaddstr(win, y + 2, x, "\\___|");
   } else if (tile == World::TILE_TREE) {
     if (!moved) return false;
     wattrset(win, COLOR_PAIR(3) | A_REVERSE);
@@ -389,6 +428,21 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     mvwaddstr(win, y + 0, x + 1,  " 0 ");
     mvwaddstr(win, y + 1, x + 1,  "+|+");
     mvwaddstr(win, y + 2, x + 1,  "/ \\");
+  } else if (tile == World::TILE_PERSON) {
+    wattrset(win, COLOR_PAIR(2));
+    mvwaddstr(win, y + 0, x + 1,  "*>*");
+    mvwaddstr(win, y + 1, x + 1,  "+|+");
+    mvwaddstr(win, y + 2, x + 1,  "/ \\");
+  } else if (tile == World::TILE_VENDOR) {
+    wattrset(win, COLOR_PAIR(4));
+    mvwaddstr(win, y + 0, x + 1,  " $ ");
+    mvwaddstr(win, y + 1, x + 1,  "+|+");
+    mvwaddstr(win, y + 2, x + 1,  "/ \\");
+  } else if (tile == World::TILE_FRIENDLY) {
+    wattrset(win, COLOR_PAIR(6));
+    mvwaddstr(win, y + 0, x + 1,  " U ");
+    mvwaddstr(win, y + 1, x + 1,  "+|+");
+    mvwaddstr(win, y + 2, x + 1,  "/ \\");
   } else {
     if (!moved) return false;
     wattrset(win, A_REVERSE);
@@ -397,13 +451,4 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
         mvwaddch(win, y + r, x + c, tile);
   }
   return true;
-}
-
-void World::drawHUD(WINDOW* win) {
-  // using wborder instead of box, because box seems to look weird while
-  // using putty to connect to the machine remotely?? idk idk idk
-  wclear(win);
-  wattron(win, COLOR_PAIR(5));
-  wborder(win, '|', '|', '-', '_', '+', '+', 'L', 'J');
-  mvwprintw(win, 2, 2, "\"%s\"", this->name.c_str());
 }

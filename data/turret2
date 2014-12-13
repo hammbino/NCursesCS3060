@@ -3,19 +3,19 @@ Turret 2
 14
  
 XXXXXXXXXXXXXXXX
-X  X> X X>     X
+Xo X! X X>     X
 XX  X   X X X  X
-XX X X   X X  XX
-XX   X  X    X X
-X  X   XX  XXX X
+XX X X   XoX  XX
+XX   X  X    XoX
+Xo X   XX  XXX X
 XXX  XX   X  X X
 XXX   XXX  X   X
-X   X  X X X X X
+X   X  XoX X X X
 X XX  X  X  X  X
 X X   X X X X XX
 X   XX         X
 X!X    XXXX XXXX
 XXXXXXXXXXXXXXXX
 1 12 / data/world3 14 27
-4 1 > 17
-9 1 > 18
+4 1 o data/world3 14 27
+9 1 > 16

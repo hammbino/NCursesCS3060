@@ -10,6 +10,8 @@
 using namespace std;
 
 int tugOfWarBar = 0;
+int counter = 0;
+WINDOW *war_win;
 
 bool bought = FALSE;
 
@@ -129,7 +131,6 @@ void Interact::getDecision(character* person) {
   } else {
     while(tugOfWarBar > -6 && tugOfWarBar < 6) {
       print_menu(menu_win, highlight);
-      battleBar(0);
       c = wgetch(menu_win);
       choice = 0;
       switch(c) {
@@ -176,7 +177,9 @@ void Interact::getDecision(character* person) {
       cin.get();
       wrefresh(result_win);
     }
+    battleBar(tugOfWarBar);
     tugOfWarBar = 0;
+    counter = 0;
     cin.get();
     endwin();
   }
@@ -193,7 +196,6 @@ int Interact::fightLogic(int userGrade, int winner, int enemyGrade) {
   } else { // computer wins
     result = gradeCompare - difference;
   }
-  battleBar(result);
   return result;
 }
 
@@ -224,6 +226,7 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     p2 = scissors;
     winner = (p1 - p2 + 3) % 3;
     tugOfWarBar += fightLogic(playerGrade, winner, enemy->scissorsGrade);
+    battleBar(tugOfWarBar);
     mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
     mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->scissorsName.c_str());
     box(result_win,0,0);
@@ -232,6 +235,7 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     p2 = paper;
     winner = (p1 - p2 + 3) % 3;
     tugOfWarBar += fightLogic(playerGrade, winner, enemy->paperGrade);
+    battleBar(tugOfWarBar);
     mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
     mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->paperName.c_str());
     box(result_win,0,0);
@@ -240,6 +244,7 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     p2 = rock;
     winner = (p1 - p2 + 3) % 3;
     tugOfWarBar += fightLogic(playerGrade, winner, enemy->rockGrade);
+    battleBar(tugOfWarBar);
     mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
     mvwprintw(result_win,2,1, "%s used %s\n", enemy->name.c_str(), enemy->rockName.c_str());
     box(result_win,0,0);
@@ -249,6 +254,7 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     if (p2 == 0) { // computer chose rock
     winner = (p1 - p2 + 3) % 3;
     tugOfWarBar += fightLogic(playerGrade, winner, enemy->rockGrade);
+    battleBar(tugOfWarBar);
     mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
     mvwprintw(result_win,2,1, "%s used %s\n\n", enemy->name.c_str(), enemy->rockName.c_str());
     box(result_win,0,0);
@@ -256,6 +262,7 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     } else if (p2 == 1) { // computer chose paper
       winner = (p1 - p2 + 3) % 3;
       tugOfWarBar += fightLogic(playerGrade, winner, enemy->paperGrade);
+      battleBar(tugOfWarBar);
       mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
       mvwprintw(result_win,2,1, "%s used %s\n\n", enemy->name.c_str(), enemy->paperName.c_str());
       box(result_win,0,0);
@@ -263,6 +270,7 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     } else { // computer chose scissors
       winner = (p1 - p2 + 3) % 3;
       tugOfWarBar += fightLogic(playerGrade, winner, enemy->scissorsGrade);
+      battleBar(tugOfWarBar);
       mvwprintw(result_win,1,1, "%s used %s\n", player->name.c_str(), playerWeap.c_str());
       mvwprintw(result_win,2,1, "%s used %s\n\n", enemy->name.c_str(), enemy->scissorsName.c_str());
       box(result_win,0,0);
@@ -526,6 +534,7 @@ void Interact::firstFight(character* person) {
     cin.get();
     wrefresh(result_win);
   }
+  battleBar(tugOfWarBar);
   tugOfWarBar = 0;
   cin.get();
   endwin();
@@ -533,17 +542,37 @@ void Interact::firstFight(character* person) {
 
 void Interact::battleBar(int points) {
   int warY, warX, winHeight, winWidth, warTotal = 0;
-  int barHeight = 2;
-  WINDOW *war_win;
+  int barHeight = 3, barWidth = 0, count = 0;
   initscr();
   clear();
   noecho();
   cbreak();
   getmaxyx(stdscr, winHeight, winWidth);
-  warY = (winHeight * .70);
+  warY = (winHeight * .65);
   warX = (winWidth * .25);
-  war_win = newwin(barHeight, winWidth * .45, warY, warX);
-
+  barWidth = winWidth * .45;
+  char barInfo [barWidth];
+  for (int i = 0; i < barWidth; i++) {
+    if (i != barWidth / 2) {
+      barInfo[i] = '-';
+      ++count;
+    }
+    else if (i == barWidth / 2)
+      barInfo[i] = '0';
+    else
+      barInfo[i] = '-';
+  }
+  if (counter == 0) {
+    war_win = newwin(barHeight, barWidth, warY, warX);
+  }
+  int level = (barWidth/2 + points * 4);
+  barInfo[level] = '|';
+  //string info = barInfo;
+  mvwprintw(war_win, 1, 1, barInfo);
   box(war_win,0,0);
   wrefresh(war_win);
+  if (tugOfWarBar >= 6 || tugOfWarBar <= -6) {
+    erase();
+    wrefresh(war_win);
+  }
 }

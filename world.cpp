@@ -475,6 +475,11 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     mvwaddstr(win, y + 0, x + 1,  " U ");
     mvwaddstr(win, y + 1, x + 1,  "+|+");
     mvwaddstr(win, y + 2, x + 1,  "/ \\");
+  } else if (tile == World::TILE_WRIGHT) {
+    wattrset(win, 0);
+    mvwaddstr(win, y + 0, x + 1,  " W ");
+    mvwaddstr(win, y + 1, x + 1,  "+|+");
+    mvwaddstr(win, y + 2, x + 1,  "/ \\");
   } else {
     if (!moved) return false;
     wattrset(win, A_REVERSE);

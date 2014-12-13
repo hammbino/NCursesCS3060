@@ -41,7 +41,7 @@ void Interact::getDecision(character* person) {
 
   startx = (winwidth * .25);
   starty = (winheight * .1);
-  character_win = newwin(winheight * .4, winwidth * .5, starty, startx);
+  character_win = newwin(winheight * .5, winwidth * .45, starty, startx);
   print_character(character_win, person);
 
   startx = (winwidth * .8);
@@ -59,7 +59,7 @@ void Interact::getDecision(character* person) {
   if (person->encounterDone > 0) {
     if (person->type == "Student") {
       // If an enemy, display beaten message
-      mvwprintw(result_win,1,1, "The student looks down in defeat.");
+      mvwprintw(result_win,1,1, "%s looks down in defeat.", person->name.c_str());
       wrefresh(result_win);
       cin.get();
       return;
@@ -118,8 +118,8 @@ void Interact::getDecision(character* person) {
           mvwprintw(result_win,1,1, "Good luck winning without my help.           ");
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
-          wrefresh(result_win);
           cin.get();
+          wrefresh(result_win);
         } 
       }
     }
@@ -158,13 +158,21 @@ void Interact::getDecision(character* person) {
         fight(result_win, person, choice);
     }
     if (tugOfWarBar <= -6) {
-      mvwprintw(result_win,1,1,"I'm the best! Go home!\n\n\n");
+      mvwprintw(result_win,1,1,"You have lost to %s\n\n", person->name.c_str());
+      player->money = player->money - 50;
+      mvwprintw(result_win,3,1,"You gave your opponent $50 for losing."); 
       box(result_win,0,0);
+      cin.get();
       wrefresh(result_win);
     } else if (tugOfWarBar >= 6) {
       person->encounterDone++;
-      mvwprintw(result_win,1,1,"You're too lucky! WAAAAAA!\n\n\n");
+      mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
+      int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
+      reward = reward * 35;
+      player->money = player->money + reward;
+      mvwprintw(result_win,3,1,"You won $%d.", reward); 
       box(result_win,0,0);
+      cin.get();
       wrefresh(result_win);
     }
     tugOfWarBar = 0;
@@ -270,6 +278,17 @@ void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
   int paper = 2;
   int scissors = 3;
   string ownedWeapons[3];
+  if (player->rockGrade >= merchant->rockGrade && choice == rock) {
+    return;
+  }
+  if (player->paperGrade >= merchant->paperGrade && choice == paper) {
+    return;
+  }
+  if (player->scissorsGrade >= merchant->scissorsGrade && choice == scissors) {
+    return;
+  }
+
+
 
   // player weapons
   ownedWeapons[0] = player->rockName;
@@ -340,25 +359,23 @@ void Interact::print_results(WINDOW *result_win, character* person) {
 void Interact::print_character(WINDOW *character_win, character* person) {
   //get name of charcater
   //append .txt to the chacarter name
-//   int x = 1, y = 1;
-//   string line;
-//   string charImage = "images/"+ person->name + ".txt";
-//   //declare a file name
-//   ifstream ci(charImage);
-//   //open the file
-//   if (!ci.good()) {
-//     throw "failed to open character image file";
-//     wprintw(character_win, "Could not open character file");
-//     box(character_win,0,0);
-//     wrefresh(character_win);
-//     return void();
-// }
-
-//   while(!ci.eof())  {
-//     getline (ci, line);
-//     mvwprintw(character_win, y, x, "%s\n", line.c_str());
-//     ++y;
-//   }  
+  int x = 1, y = 1;
+  string line;
+  string charImage = "images/" + person->name + ".txt";
+  //declare a file name
+  ifstream ci(charImage.c_str());
+  //open the file
+  if (ci.is_open()){
+    while(ci.good())  {
+      getline (ci, line);
+      mvwprintw(character_win, y, x, "%s\n", line.c_str());
+      ++y;
+      } 
+  } else { 
+    mvwprintw(character_win, y, x, "Could not open file");
+    mvwprintw(character_win, 2, x, "%s\n", charImage.c_str());
+  }
+  ci.close();
 //open the file
 //while not the end of file read a line and display in the window
 //when end of close the file 

@@ -1,49 +1,46 @@
-world 3
+World 3
 54
 36
  
- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT 
+ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
  T                                                   T
- T						     T
+ T                                                   T
  T      TT               TT                  TT      T
  T    TT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       T
  T       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       T
  T       ~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~       T
  T       ~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~       T
- T       ~~XX! X                      X  !XX~~TT     T 
- T    TT ~~XXX X                        XXXX~~       T 
- T       ~~XX                             XX~~       T 
- T       ~~XX                             XX~~       T 
- T       ~~XX                             XX~~       T 
- T       ~~XX         XXXXXXXXX           XX~~       T 
-TT       ~~XX         X   !   X           XX~~       T 
+ T       ~~XX! X                      X  !XX~~TT     T
+ T    TT ~~XXX X                        XXXX~~       T
+ T       ~~XX                             XX~~       T
+ T       ~~XX                             XX~~       T
+ T       ~~XX                             XX~~       T
+ T       ~~XX         XXXXXXXXX           XX~~       T
+TT       ~~XX         X   !   X           XX~~       T
 !        ~~XX         X       X           XX~~       T
 TT       ~~XX                 X           XX~~       T
  T       ~~XX         XXXXXXXXX         oooooooo     T
- T       ~~XX                             XX~~       T 
- T       ~~XX                             XX~~       T 
- T    TT ~~XX                             XX~~       T 
- T       ~~~~~~~~~~~~~~~o~~~~~~~o~~~~~~~~~~~~~       T 
- T       ~~XX                             XX~~       T 
- T       ~~XX                             XX~~       T 
- T       ~~XX                          XXXXX~~TT     T 
- T       ~~XXXX XX                       XXX~~       T 
- T       ~~XXXX XX                     X  XX~~       T 
- T       ~~XX!  XX                     XX!XX~~       T 
+ T       ~~XX                             XX~~       T
+ T       ~~XX                             XX~~       T
+ T    TT ~~XX                             XX~~       T
+ T       ~~~~~~~~~~~~~~~o~~~~~~~o~~~~~~~~~~~~~       T
+ T       ~~XX                             XX~~       T
+ T       ~~XX                             XX~~       T
+ T       ~~XX                          XXXXX~~TT     T
+ T       ~~XXXX XX                       XXX~~       T
+ T       ~~XXXX XX                     X  XX~~       T
+ T       ~~XX!  XX                     XX!XX~~       T
  T       ~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~       T
- T       ~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~       T 
- T       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       T 
- T       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       T 
- T    TT                  TT                  TT     T 
- T                                                   T 
- T                                                   T 
- TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT 
-
-0 16 o data/home 53 19                                                    
-13 9 / data/turret1 2 1
-13 28 / dat/turret2 2 12
-26 15 / data/throneRoom 2 2
-41 9 / data/turret3 2 1
-41 28 / data/turret4 2 12
-
-
+ T       ~~XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX~~       T
+ T       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       T
+ T       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~       T
+ T    TT                  TT                  TT     T
+ T                                                   T
+ T                                                   T
+ TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+0 15 o data/home 53 19
+13 8 / data/turret1 2 1
+13 27 / data/turret2 1 11
+26 14 / data/throneRoom 2 1
+41 8 / data/turret3 2 1
+41 27 / data/turret4 1 11

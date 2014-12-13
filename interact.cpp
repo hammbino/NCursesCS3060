@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <time.h>
 
 using namespace std;
 
@@ -44,8 +45,8 @@ void Interact::getDecision(character* person) {
   getmaxyx(stdscr, winheight, winwidth);
 
   startx = (winwidth * .25);
-  starty = (winheight * .1);
-  character_win = newwin(winheight * .5, winwidth * .45, starty, startx);
+  starty = (winheight * .02);
+  character_win = newwin(winheight * .7, winwidth * .45, starty, startx);
   print_character(character_win, person);
 
   startx = (winwidth * .8);
@@ -116,13 +117,11 @@ void Interact::getDecision(character* person) {
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
           wrefresh(result_win);
-          cin.get();
 	  bought = FALSE;
         } else if (choice == 4 && !bought) {
           mvwprintw(result_win,1,1, "Good luck winning without my help.           ");
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
-          cin.get();
           wrefresh(result_win);
         } 
       }
@@ -131,6 +130,7 @@ void Interact::getDecision(character* person) {
     wrefresh(result_win);
     cin.get();
   } else {
+    battleBar(tugOfWarBar);
     while(tugOfWarBar > -6 && tugOfWarBar < 6) {
       print_menu(menu_win, highlight);
       c = wgetch(menu_win);
@@ -252,6 +252,8 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     box(result_win,0,0);
     wrefresh(result_win);
   } else { // enemy has all weapons choose random
+    int seed = static_cast<int>(time(0));
+    srand(seed);
     p2 = rand() % 3; // computer chooses
     if (p2 == 0) { // computer chose rock
     winner = (p1 - p2 + 3) % 3;
@@ -336,6 +338,7 @@ void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
     mvwprintw(result_win,4,1, "%d %s\n", player->rockGrade, player->rockName.c_str());
     mvwprintw(result_win,5,1, "%d %s\n", player->paperGrade, player->paperName.c_str());
     mvwprintw(result_win,6,1, "%d %s\n", player->scissorsGrade, player->scissorsName.c_str());
+    box(result_win,0,0);
     wrefresh(result_win);
   }
 }
@@ -462,8 +465,8 @@ void Interact::firstFight(character* person) {
     wrefresh(result_win);
     cin.get();
     mvwprintw(result_win,1,1, "Lets practice your rock/paper/scissors skills\n");
-    mvwprintw(result_win,2,1, "\n");
-    mvwprintw(result_win,3,1, "\n");
+    mvwprintw(result_win,2,1, "Get the bar to the green end to win. \n");
+    mvwprintw(result_win,3,1, "If you guess right, your hit will be more effective.\n");
     box(result_win,0,0);
     wrefresh(result_win);
     cin.get();
@@ -489,6 +492,7 @@ void Interact::firstFight(character* person) {
   }
   print_menu(menu_win, highlight);
 
+  battleBar(tugOfWarBar);
   while(tugOfWarBar > -6 && tugOfWarBar < 6) {
     print_menu(menu_win, highlight);
     c = wgetch(menu_win);
@@ -526,8 +530,11 @@ void Interact::firstFight(character* person) {
     wrefresh(result_win);
   } else if (tugOfWarBar >= 6) {
     person->encounterDone++;
-    mvwprintw(result_win,1,1,"Great you are now ready to progress in your jorney\n\n");
-    mvwprintw(result_win,3,1,"Take this as a gift $100.\n\n");
+    mvwprintw(result_win,1,1,"As you can see even if you guess wrong,\n");
+    mvwprintw(result_win,2,1,"you can still win if you upgrade your weapons.\n");
+    mvwprintw(result_win,3,1,"You are now ready to progress in your journey. Good luck!\n");
+    mvwprintw(result_win,4,1,"Take this as a gift $100\n");
+    box(result_win,0,0);
     box(result_win,0,0);
     cin.get();
     wrefresh(result_win);

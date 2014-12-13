@@ -299,9 +299,6 @@ void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
   if (player->scissorsGrade >= merchant->scissorsGrade && choice == scissors) {
     return;
   }
-
-
-
   // player weapons
   ownedWeapons[0] = player->rockName;
   ownedWeapons[1] = player->paperName;
@@ -562,17 +559,15 @@ void Interact::battleBar(int points) {
     else
       barInfo[i] = '0';
   }
-  if (counter == 0) {
+  if (counter == 0)
     war_win = newwin(barHeight, barWidth, warY, warX);
-  }
   int level = (barWidth/2 + (points * ((barWidth/6)/2)));
-  if (tugOfWarBar <= -6)
+  if (tugOfWarBar < -5)
     barInfo[1] = '|';
-  else if (tugOfWarBar > 6)
-    barInfo[strlen(barInfo)-2] = '|';
+  else if (tugOfWarBar > 5)
+    barInfo[barWidth - 3] = '|';
   else
     barInfo[level] = '|';
-  // attron(COLOR_PAIR(2));
   for (j = 0; j <= count / 2; ++j)
     if (barInfo[j] == '|') 
       mvwaddch (war_win, 1, j, barInfo[j] | COLOR_PAIR(1) | A_REVERSE);
@@ -584,11 +579,25 @@ void Interact::battleBar(int points) {
       mvwaddch (war_win, 1, j, barInfo[j] | COLOR_PAIR(1) | A_REVERSE);
     else
       mvwaddch (war_win, 1, j, barInfo[j] | COLOR_PAIR(4) | A_REVERSE);
-  //mvwprintw(war_win, 1, 1, barInfo);
   box(war_win,0,0);
   wrefresh(war_win);
-  // if (tugOfWarBar >= 6 || tugOfWarBar <= -6) {
-  //   erase();
-  //   wrefresh(war_win);
-  // }
+}
+
+void Interact::showStat (character* player) {
+  WINDOW *stat_win; 
+  int statY, statX, winHeight, winWidth;
+  initscr();
+  clear();
+  noecho();
+  cbreak();
+  getmaxyx(stdscr, winHeight, winWidth);
+  statY = (winHeight * .99);
+  statX = (winWidth * .75);
+  stat_win = newwin(winHeight * .1, winWidth * .3, statY, statX);
+  mvwprintw(stat_win,1,1, "%d %s\n", player->rockGrade, player->rockName.c_str());
+  mvwprintw(stat_win,2,1, "%d %s\n", player->paperGrade, player->paperName.c_str());
+  mvwprintw(stat_win,3,1, "%d %s\n", player->scissorsGrade, player->scissorsName.c_str());
+  wrefresh(stat_win);
+  wgetch(stat_win);
+  endwin();
 }

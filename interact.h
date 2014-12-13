@@ -35,4 +35,5 @@ public:
   void print_results(WINDOW *result_win, character*);
   void firstFight(character* person);
   void battleBar(int points);
+  void showStat(character* player);
 };

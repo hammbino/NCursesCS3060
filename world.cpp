@@ -432,8 +432,14 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     mvwaddstr(win, y + 1, x, "|AAA|");
     mvwaddstr(win, y + 2, x, " _|_ ");
   } else if (tile == World::TILE_FAULTROCK) {
-    if (!moved) return false;
-    
+    if (!moved && (x + y + frame) % 4 > 0) return false;
+    for (int c = x; c < x + 5; ++c) {
+      for (int r = y; r < y + 3; ++r) {
+        int color = (c * 20 + r * 50 + frame) / 50 % 6 + 2;
+        wattrset(win, COLOR_PAIR(color) | A_REVERSE);
+        mvwaddch(win, r, c, ' ');
+      }
+    }
   } else if (tile == World::TILE_PLAYER) {
     int color = frame % 6 + 2;
     wattrset(win, COLOR_PAIR(color));

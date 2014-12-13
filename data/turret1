@@ -5,17 +5,26 @@ Turret 1
 XXXXXXXXXXXXXXXX
 X!             X
 X   XXXXXXXXX  X
-X        X  X  X
+X        X!:X  X
 X  XXXX  X  X  X
-X     X     X  X
-XXX   XXXXXXX  X
-XXX   X        X
-X     X  XXXXXXX
-X     X       >X
+X  o!oX     X  X
+XXXoooXXXXXXX  X
+XXX!!oX        X
+X o!ooX  XXXXXXX
+X ooo!XX      >X
 X XXXXXXXXXXXXXX
 X             >X
 XXXXXXXXXXXXXXXX
 XXXXXXXXXXXXXXXX
 1 1 / data/world3 14 8
+4 5 o data/world3 14 8
+4 7 o data/world3 14 8
+3 7 o data/world3 14 8
+3 8 o data/world3 14 8
+5 9 o data/world3 14 8
+10 3 o data/world3 14 8
 14 11 > 3
 14 9 > 2
+11 3 : 32 3
+
+WATCH YOUR STEP ON THESE TILES

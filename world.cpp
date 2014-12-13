@@ -391,7 +391,7 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     wattrset(win, A_REVERSE);
     mvwaddstr(win, y + 0, x + 1, "/.|");
     mvwaddstr(win, y + 1, x, "/..\\");
-    mvwaddstr(win, y + 2, x, "\\___|");
+    mvwaddstr(win, y + 2, x, "\\...|");
   } else if (tile == World::TILE_TREE) {
     if (!moved) return false;
     wattrset(win, COLOR_PAIR(3) | A_REVERSE);
@@ -399,6 +399,18 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     mvwaddstr(win, y + 1, x, "//\\\\");
     wattrset(win, COLOR_PAIR(5));
     mvwaddstr(win, y + 2, x + 1, "##");
+  } else if (tile == World::TILE_CLOUD) {
+    if (!moved) return false;
+    wattrset(win, COLOR_PAIR(1) | A_REVERSE);
+    mvwaddstr(win, y + 0, x, "( )( ");
+    mvwaddstr(win, y + 1, x, "_) ()");
+    mvwaddstr(win, y + 2, x, " ((_)");
+  } else if (tile == World::TILE_CLOUDGROUND) {
+    if (!moved) return false;
+    wattrset(win, 0);
+    mvwaddstr(win, y + 0, x, "( )( ");
+    mvwaddstr(win, y + 1, x, "_) ()");
+    mvwaddstr(win, y + 2, x, " ((_)");
   } else if (tile == World::TILE_WATER) {
     if (!moved && frame % 4 != 0) return false;
     static string water = "~   ~   ~   ~   ~   ";
@@ -420,8 +432,14 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     mvwaddstr(win, y + 1, x, "|AAA|");
     mvwaddstr(win, y + 2, x, " _|_ ");
   } else if (tile == World::TILE_FAULTROCK) {
-    if (!moved) return false;
-    
+    if (!moved && (x + y + frame) % 4 > 0) return false;
+    for (int c = x; c < x + 5; ++c) {
+      for (int r = y; r < y + 3; ++r) {
+        int color = (c * 20 + r * 50 + frame) / 50 % 6 + 2;
+        wattrset(win, COLOR_PAIR(color) | A_REVERSE);
+        mvwaddch(win, r, c, ' ');
+      }
+    }
   } else if (tile == World::TILE_PLAYER) {
     int color = frame % 6 + 2;
     wattrset(win, COLOR_PAIR(color));
@@ -439,7 +457,7 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     mvwaddstr(win, y + 1, x + 1,  "+|+");
     mvwaddstr(win, y + 2, x + 1,  "/ \\");
   } else if (tile == World::TILE_FRIENDLY) {
-    wattrset(win, COLOR_PAIR(6));
+    wattrset(win, COLOR_PAIR(5));
     mvwaddstr(win, y + 0, x + 1,  " U ");
     mvwaddstr(win, y + 1, x + 1,  "+|+");
     mvwaddstr(win, y + 2, x + 1,  "/ \\");

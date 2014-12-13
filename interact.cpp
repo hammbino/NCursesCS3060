@@ -542,7 +542,7 @@ void Interact::firstFight(character* person) {
 
 void Interact::battleBar(int points) {
   int warY, warX, winHeight, winWidth, warTotal = 0;
-  int barHeight = 3, barWidth = 0, count = 0;
+  int barHeight = 3, barWidth = 0, count = 0, j;
   initscr();
   clear();
   noecho();
@@ -552,32 +552,41 @@ void Interact::battleBar(int points) {
   warX = (winWidth * .25);
   barWidth = winWidth * .45;
   char barInfo [barWidth];
-  for (int i = 0; i < barWidth; i++) {
+  for (int i = 0; i < barWidth-1; i++) {
     if (i != barWidth / 2) {
       barInfo[i] = '-';
       ++count;
     }
-    else if (i == barWidth / 2)
-      barInfo[i] = '0';
     else
-      barInfo[i] = '-';
+      barInfo[i] = '0';
   }
   if (counter == 0) {
     war_win = newwin(barHeight, barWidth, warY, warX);
   }
   int level = (barWidth/2 + (points * ((barWidth/6)/2)));
   if (tugOfWarBar <= -6)
-    barInfo[0] = '|';
-  else if (tugOfWarBar > 5)
-    barInfo[barWidth-3] = '|';
+    barInfo[1] = '|';
+  else if (tugOfWarBar > 6)
+    barInfo[strlen(barInfo)-2] = '|';
   else
     barInfo[level] = '|';
-  //string info = barInfo;
-  mvwprintw(war_win, 1, 1, barInfo);
+  // attron(COLOR_PAIR(2));
+  for (j = 0; j <= count / 2; ++j)
+    if (barInfo[j] == '|') 
+      mvwaddch (war_win, 1, j, barInfo[j] | COLOR_PAIR(1) | A_REVERSE);
+    else
+      mvwaddch (war_win, 1, j, barInfo[j] | COLOR_PAIR(2) | A_REVERSE);
+  mvwaddch (war_win, 1, j, barInfo[j++] | COLOR_PAIR(1));
+  for (; j < count; ++j)
+    if (barInfo[j] == '|') 
+      mvwaddch (war_win, 1, j, barInfo[j] | COLOR_PAIR(1) | A_REVERSE);
+    else
+      mvwaddch (war_win, 1, j, barInfo[j] | COLOR_PAIR(4) | A_REVERSE);
+  //mvwprintw(war_win, 1, 1, barInfo);
   box(war_win,0,0);
   wrefresh(war_win);
-  if (tugOfWarBar >= 6 || tugOfWarBar <= -6) {
-    erase();
-    wrefresh(war_win);
-  }
+  // if (tugOfWarBar >= 6 || tugOfWarBar <= -6) {
+  //   erase();
+  //   wrefresh(war_win);
+  // }
 }

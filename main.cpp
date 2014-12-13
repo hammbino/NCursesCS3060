@@ -34,7 +34,7 @@ int main(void) {
   populateCharacters(people);
 
   // create world and run it
-  World w("data/swamp");
+  World w("data/home");
   w.run(mainwin);
 
   // clean up and close

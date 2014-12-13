@@ -108,17 +108,29 @@ class World {
  public:
     // constants representing the types of tiles
     static const char TILE_FLOOR = ' ';
-    static const char TILE_WALL = 'X';
+    static const char TILE_GRASS = ',';
+    static const char TILE_SAND = '.';
+    static const char TILE_PEBBLES = 'o';
     static const char TILE_TREE = 'T';
     static const char TILE_WATER = '~';
-    static const char TILE_GRASS = ',';
+    static const char TILE_ROCK = 'O';
+    static const char TILE_CLOUD = 'C';
+    static const char TILE_CLOUDGROUND = 'c';
+    static const char TILE_REDBRICK = 'X';
+    static const char TILE_YELLOWBRICK = 'Y';
+    static const char TILE_AQUABRICK = 'Z';
+    static const char TILE_FAKEWALL = 'x';
+    static const char TILE_DARKWALL = 'D';
     static const char TILE_STAIRS = '/';
     static const char TILE_FAULTROCK = 'R';
+    static const char TILE_STARPOOL = '*';
     // constants for object-ish tiles
     static const char TILE_PLAYER = 'p';
     static const char TILE_TELEP = '!';
     static const char TILE_SIGN = ':';
-    static const char TILE_PERSON = '?';
+    static const char TILE_PERSON = '>';
+    static const char TILE_FRIENDLY = '?';
+    static const char TILE_VENDOR = '$';
     // default world constructor
     //  creates an 8x8 closed-off room with the player inside.
     World();

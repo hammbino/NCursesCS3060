@@ -403,3 +403,130 @@ void Interact::setOptions(character* options) {
 	choices[2] = player->scissorsName;
   }
 }
+
+void Interact::firstFight(character* person) {
+    WINDOW *character_win;
+    WINDOW *menu_win;
+    WINDOW *result_win;
+    setOptions(person);
+    int startx = 0;
+    int starty = 0;
+    int highlight = 1;
+    int choice;
+    int c;
+    int winwidth = 0;
+    int winheight = 0;
+    
+    initscr();
+    clear();
+    noecho();
+    cbreak();
+    getmaxyx(stdscr, winheight, winwidth);
+    
+    startx = (winwidth * .25);
+    starty = (winheight * .1);
+    character_win = newwin(winheight * .5, winwidth * .45, starty, startx);
+    print_character(character_win, person);
+    
+    startx = (winwidth * .8);
+    starty = (winheight * .75);
+    
+    menu_win = newwin(winheight - starty, winwidth - startx, starty, startx);
+    startx = (winwidth - winwidth * .99);
+    starty = (winheight - winheight * .25);
+    result_win = newwin(winheight - starty, winwidth - winwidth *.25, starty, startx);
+    
+    keypad(menu_win, TRUE);
+    
+    print_results(result_win, person);
+
+    if (person->type == "Angel") {
+      mvwprintw(result_win,1,1, "I told him to go easier on you\n");
+      mvwprintw(result_win,2,1, "Let me help you with the game fundimentals\n");
+      mvwprintw(result_win,3,1, "As you can see my husband had stronger weapons than you\n");
+      box(result_win,0,0);
+      wrefresh(result_win);
+      cin.get();
+      mvwprintw(result_win,1,1, "You will need to earn money by fighting other students\n");
+      mvwprintw(result_win,2,1, "Then look for Vendors to purchase stronger equipment\n");
+      mvwprintw(result_win,3,1, "Once you are strong enough I will make sure he gives you another shot\n");
+      box(result_win,0,0);
+      wrefresh(result_win);
+      cin.get();
+      mvwprintw(result_win,1,1, "Lets practice your rock/paper/scissors skills\n");
+      mvwprintw(result_win,2,1, "\n");
+      mvwprintw(result_win,3,1, "\n");
+      box(result_win,0,0);
+      wrefresh(result_win);
+      cin.get();
+    } else {
+        mvwprintw(result_win,1,1, "[You] I demand a better grade for my Ncurses Game!\n");
+        mvwprintw(result_win,2,1, "I poured my blood sweat and tears into it!\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+        mvwprintw(result_win,1,1, "[Wright] No.\n");
+        mvwprintw(result_win,2,1, "\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+        mvwprintw(result_win,1,1, "[You] I challenge you to a game of rock paper scissors!\n");
+        mvwprintw(result_win,2,1, "The victor gets his way!\n");
+        mvwprintw(result_win,3,1, "[Wright] Deal!\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+
+    }
+    print_menu(menu_win, highlight);
+
+    while(tugOfWarBar > -6 && tugOfWarBar < 6) {
+        print_menu(menu_win, highlight);
+        c = wgetch(menu_win);
+        choice = 0;
+        switch(c) {
+            case KEY_UP:
+            case 'w':
+            case 'k':
+                if(highlight == 1)
+                    highlight = n_choices;
+                else
+                    --highlight;
+                break;
+                
+            case KEY_DOWN:
+            case 'j':
+            case 's':
+                if(highlight == n_choices)
+                    highlight = 1;
+                else
+                    ++highlight;
+                break;
+            case 10:
+                choice = highlight;
+                break;
+        }
+        print_menu(menu_win, highlight);
+        if(choice != 0)
+            fight(result_win, person, choice);
+    }
+    if (tugOfWarBar <= -6) {
+        mvwprintw(result_win,1,1,"Hahaha I'm too powerful for this game!!!\n\n\n");
+        box(result_win,0,0);
+        cin.get();
+        wrefresh(result_win);
+    } else if (tugOfWarBar >= 6) {
+        person->encounterDone++;
+        mvwprintw(result_win,1,1,"Great you are now ready to progress in your jorney");
+        mvwprintw(result_win,3,1,"Take this as a gift $100.");
+        box(result_win,0,0);
+        cin.get();
+        wrefresh(result_win);
+    }
+    tugOfWarBar = 0;
+    cin.get();
+    endwin();
+
+}

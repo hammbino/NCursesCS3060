@@ -3,6 +3,7 @@
 #include "curses.h"
 #include "interact.h"
 #include <stdlib.h>
+#include <string.h>
 #include <sstream>
 #include <iostream>
 #include <fstream>

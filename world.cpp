@@ -380,12 +380,6 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
     mvwaddstr(win, y + 0, x, "o .o ");
     mvwaddstr(win, y + 1, x, ". o .");
     mvwaddstr(win, y + 2, x, " .  o");
-  } else if (tile == World::TILE_REDBRICK) {
-    if (!moved) return false;
-    wattrset(win, COLOR_PAIR(2) | A_REVERSE);
-    mvwaddstr(win, y + 0, x, "|__|_");
-    mvwaddstr(win, y + 1, x, "_|__|");
-    mvwaddstr(win, y + 2, x, "|_|__");
   } else if (tile == World::TILE_ROCK) {
     if (!moved) return false;
     wattrset(win, A_REVERSE);
@@ -419,6 +413,26 @@ bool World::drawTile(char tile, WINDOW* win, int x, int y,
       int pos = 10 + (frame/4 + y + x + i)%4 * (((y + i) % 2)? -1 : 1);
       mvwaddstr(win, y + i, x, water.substr(pos, 5).c_str());
     }
+  } else if (tile == World::TILE_REDBRICK) {
+    if (!moved) return false;
+    wattrset(win, COLOR_PAIR(2) | A_REVERSE);
+    mvwaddstr(win, y + 0, x, "|__|_");
+    mvwaddstr(win, y + 1, x, "_|__|");
+    mvwaddstr(win, y + 2, x, "|_|__");
+  } else if (tile == World::TILE_YELLOWBRICK) {
+    if (!moved) return false;
+    wattrset(win, COLOR_PAIR(3) | A_REVERSE);
+    mvwaddstr(win, y + 0, x, "|__|_");
+    mvwaddstr(win, y + 1, x, "_|__|");
+    mvwaddstr(win, y + 2, x, "|_|__");
+  } else if (tile == World::TILE_AQUABRICK) {
+    if (!moved) return false;
+    wattrset(win, COLOR_PAIR(5) | A_REVERSE);
+    mvwaddstr(win, y + 0, x, "|__|_");
+    mvwaddstr(win, y + 1, x, "_|__|");
+    mvwaddstr(win, y + 2, x, "|_|__");
+  } else if (tile == World::TILE_DARKWALL) {
+    return false;
   } else if (tile == World::TILE_STAIRS) {
     if (!moved) return false;
     wattrset(win, A_REVERSE);

@@ -4,26 +4,28 @@ Tower Entrance
 T
 TTTTTTTTTTTTTTTTTT
 TTTTTTT    TTTTTTT
-TTTT XXXXXXXX  TTT
-TT>  X     !X    T
-T  ~ X      X T TT
-T T~~X      XT   T
-T ~~~XXX  XXX  TTT
-T ~ ~XXX  XXXT T T
+TTTT ZZZZZZZZ  TTT
+TT>  Z     !Z    T
+T  ~ Z      Z T TT
+T T~~Z      ZT   T
+T ~~~ZZZ  ZZZ  TTT
+T ~ ~ZZZ  ZZZT T T
 T   ~T    :  TTT T
 TT~    T    TTT  T
 T~~ T~~~    T  TTT
 T~  ~T    TT     T
 T ~~~T T~~    T  T
 T~~~~~           T
-T~~~ TTTTXXXXX   T
-T ~~~~~~ X   X   T
-TTT~~~~  XX XX  TT
-TT  T~~~ XX XX   T
+T~~~ TTTTZZZZZ   T
+T ~T~~~T Z   Z   T
+T ~~~~~~ Z/  Z   T
+TTT~~~~  ZZ ZZ  TT
+TT  T~~~ ZZ ZZ   T
 TTTT   ~~~     TTT
 TT  TTT   T  TTTTT
 TTTTTTTTTTTTTTTTTT
 11 3 / data/profRoom 4 6
+10 16 / data/maze 1 10
 10 8 : 19 3
 //=-           -=\\
      THE TOWER

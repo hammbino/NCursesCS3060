@@ -1,0 +1,27 @@
+The Maze
+17
+17
+ 
+DDDDDDDDDDDDDDDDD
+D!    D   D>    D
+DDDDD D D DDD D D
+D   D   D   D D D
+D D   DDDDD   D D
+D DDD D     D D D
+D D DDDDD DDD D D
+D>D D       D D D
+DDD D DDDDD DDD D
+D!D   D   D D>D D
+D DDDDD D DDD D D
+D     D D       D
+DDDDD D DDD DDD D
+D   D D D   D   D
+DDD   D D DDD DDD
+D>  D   D       D
+DDDDDDDDDDDDDDDDD
+1 1 / data/world4 8 4
+1 9 / data/tower0 10 15
+11 1 > 22
+13 9 > 23
+1 15 > 24
+1 7 > 25

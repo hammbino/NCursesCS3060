@@ -1,0 +1,26 @@
+Dungeon Entry
+22
+16
+ 
+TTTTTTTTTTTTTTTTTTTTTT
+T                    T
+T   ZZZZZZZ          T
+T   Z     Z          T
+T   Z    !Z          T
+T   ZZ ZZZZ          T
+T   ZZ ZZZZ          T
+T                    T
+T     :              T
+T                    T
+T                    T
+T        o           T
+T       .  .         T
+T     .. o.  . .     T
+TTTTTTTTToTTTTTTTTTTTT
+        T!T           
+9 15 o data/home 27 1
+9 4 / data/maze 2 1
+6 8 ? 26 3
+"Wright's tower is beyond
+a dark dungeon... good
+luck in there!"

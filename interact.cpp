@@ -129,6 +129,7 @@ void Interact::getDecision(character* person) {
   } else {
     while(tugOfWarBar > -6 && tugOfWarBar < 6) {
       print_menu(menu_win, highlight);
+      battleBar(0);
       c = wgetch(menu_win);
       choice = 0;
       switch(c) {
@@ -192,6 +193,7 @@ int Interact::fightLogic(int userGrade, int winner, int enemyGrade) {
   } else { // computer wins
     result = gradeCompare - difference;
   }
+  battleBar(result);
   return result;
 }
 
@@ -527,4 +529,21 @@ void Interact::firstFight(character* person) {
   tugOfWarBar = 0;
   cin.get();
   endwin();
+}
+
+void Interact::battleBar(int points) {
+  int warY, warX, winHeight, winWidth, warTotal = 0;
+  int barHeight = 2;
+  WINDOW *war_win;
+  initscr();
+  clear();
+  noecho();
+  cbreak();
+  getmaxyx(stdscr, winHeight, winWidth);
+  warY = (winHeight * .70);
+  warX = (winWidth * .25);
+  war_win = newwin(barHeight, winWidth * .45, warY, warX);
+
+  box(war_win,0,0);
+  wrefresh(war_win);
 }

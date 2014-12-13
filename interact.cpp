@@ -279,7 +279,6 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
       wrefresh(result_win);
     }
   }
-  mvwprintw(result_win,4,1, "6 you win     -6 you lose = %d \n", tugOfWarBar);
   box(result_win,0,0);
   wrefresh(result_win);
 }

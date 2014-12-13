@@ -26,8 +26,8 @@ TT..                       o                       ..TT
  T..                :      o                       ..T 
  T..   T   ~~~~~~ ~~~~~~   o                   T   ..T 
  T..   T   ~,,,,,,,,,,,~   o                   T   ..T 
- T..   T   ~,,T,,T,,T,,~   o                   T   ..T 
- T..   T    ,T,,T,T,,T,    o                   T   ..T 
+ T..   T   ~,,T,,T,,T,,~   o      >     >      T   ..T 
+ T..   T    ,T,,T,T,,T,    o     X>X   Y>Y     T   ..T 
  T..   T   ~,,T,,T,,T,,~   o                   T   ..T 
  T..   T   ~,,,,,,,,,,,~   o                   T   ..T 
  T..   T   ~~~~~~ ~~~~~~   o                   T   ..T 
@@ -86,3 +86,7 @@ blue people are friendly."
 "Green people will sell
 you weapons. Better fight
 people to earn cash..."
+34 24 $ 26
+34 25 X 26
+40 24 $ 27
+40 25 Y 27

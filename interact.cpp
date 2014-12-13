@@ -70,6 +70,12 @@ void Interact::getDecision(character* person) {
       return;
     } else if (person->type == "Vendor") {
       // If a vendor, continue but without the dialogue
+    } else if (person->type == "Professor") {
+      mvwprintw(result_win,3,1, "Congratulations! Farwell!\n");
+      box(result_win,0,0);
+      wrefresh(result_win);
+      cin.get();
+      return;
     }
   }
   print_menu(menu_win, highlight);
@@ -170,14 +176,49 @@ void Interact::getDecision(character* person) {
       wrefresh(result_win);
     } else if (tugOfWarBar >= 6) {
       person->encounterDone++;
-      mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
-      int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
-      reward = reward * 38;
-      player->money = player->money + reward;
-      mvwprintw(result_win,3,1,"You won $%d.", reward); 
-      box(result_win,0,0);
-      cin.get();
-      wrefresh(result_win);
+      if (person->type == "Professor") { // final fight dialogue
+        mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
+        int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
+        reward = reward * 38;
+        player->money = player->money + reward;
+        mvwprintw(result_win,3,1,"You won $%d.", reward); 
+	box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+	mvwprintw(result_win,1,1, "[You] HA! I have defeated you in a fair fight!\n");
+        mvwprintw(result_win,2,1, "\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+        mvwprintw(result_win,1,1, "[Wright] Yes but did you learn anything along the way?\n");
+        mvwprintw(result_win,2,1, "\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+        mvwprintw(result_win,1,1, "[You] Wha...? This was all a test of my ooey gooey inner\n");
+        mvwprintw(result_win,2,1, "character stuff?\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+	mvwprintw(result_win,1,1, "[Wright] Indeed. Now that you have proven determination\n");
+        mvwprintw(result_win,2,1, "I can see that you will rise above any challenge given you.\n");
+        mvwprintw(result_win,3,1, "Congratulations! Farwell!\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+      } else {
+        mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
+        int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
+        reward = reward * 38;
+        player->money = player->money + reward;
+        mvwprintw(result_win,3,1,"You won $%d.", reward); 
+        box(result_win,0,0);
+        cin.get();
+        wrefresh(result_win);
+	  }
     }
     battleBar(tugOfWarBar);
     tugOfWarBar = 0;

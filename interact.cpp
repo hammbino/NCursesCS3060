@@ -75,7 +75,7 @@ void Interact::getDecision(character* person) {
   print_menu(menu_win, highlight);
 
   if (n_choices == 4) {
-    mvwprintw(result_win,1,1, "$%d\n", player->money);
+    mvwprintw(result_win,7,1, "$%d\n", player->money);
     mvwprintw(result_win,2,1, "Are you here to buy or waste my time?");
     box(result_win,0,0);
     wrefresh(result_win);
@@ -305,21 +305,21 @@ void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
   ownedWeapons[1] = player->paperName;
   ownedWeapons[2] = player->scissorsName;
   // output player money
-  mvwprintw(result_win,1,1, "$%d\n", player->money);
+  mvwprintw(result_win,7,1, "$%d\n", player->money);
   box(result_win,0,0);
   wrefresh(result_win);
   //check grade if weapon is weaker or equal dont allow them to buy
 
   // Compare items cost to the money the user has
   if (cost > player->money) {
-    mvwprintw(result_win,2,1, "Do I look like the charitable type to you?\n");
-    mvwprintw(result_win,3,1, "Don't come back without a bigger wallet.\n");
+    mvwprintw(result_win,1,1, "Do I look like the charitable type to you?\n");
+    mvwprintw(result_win,2,1, "Don't come back without a bigger wallet.\n");
     wrefresh(result_win);
   } else {
-    mvwprintw(result_win,2,1, "Excellent choice, that should help you beat\n");
-    mvwprintw(result_win,3,1, "the others.\n");
+    mvwprintw(result_win,1,1, "Excellent choice, that should help you beat\n");
+    mvwprintw(result_win,2,1, "the others.\n");
     player->money = player->money - cost;
-    mvwprintw(result_win,1,1, "$%d\n", player->money);
+    mvwprintw(result_win,7,1, "$%d\n", player->money);
     box(result_win,0,0);
     wrefresh(result_win);
     
@@ -362,7 +362,7 @@ void Interact::print_menu(WINDOW *menu_win, int highlight) {
 
 void Interact::print_results(WINDOW *result_win, character* person) {
   
-  mvwprintw(result_win,1,2,"You approach %s\n", person->name.c_str());
+  mvwprintw(result_win,1,1,"You approach %s\n", person->name.c_str());
   box(result_win,0,0);
   wrefresh(result_win);
 }

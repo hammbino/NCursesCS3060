@@ -40,8 +40,8 @@ TT..                       o                       ..TT
  T.........................o.........................T 
  TTTTTTTTTTTTTTTTTTTTTTTTTToTTTTTTTTTTTTTTTTTTTTTTTTTT 
                           T!T                          
-0 19 o data/home 3 3
-54 19 o data/home 3 3
+0 19 o data/home 20 30
+54 19 o data/world3 1 16
 27 0 o data/home 3 3
 27 37 o data/home 3 3
 13 17 : 20 3

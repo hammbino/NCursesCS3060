@@ -1,0 +1,19 @@
+Turret 3
+16
+14
+ 
+XXXXXXXXXXXXXXXX
+X!    X    X   X
+X XXX  X  X  XXX
+X X  X X  X  X X
+X   XX  X  X X X
+X XXX XX   X X X
+X X   XXXX   X X
+X X X X X  X   X
+X   X X X XXXXXX
+XXX X     X    X
+X   XXXXXXXX XXX
+X  X           X
+X    XX    XXXXX
+XXXXXXXXXXXXXXXX
+1 1 / data/world3 40 9

@@ -3,18 +3,18 @@ Turret 4
 14
  
 XXXXXXXXXXXXXXXX
-X!X!X!X!X      X
+X!X!X!X!X!oooooX
 X X X X X X X  X
-X X X X  X X  XX
-X X X  X X   X X
-X X X  X XX  XXX
-X X X  X X  X XX
-X X X X  X   XXX
-X X X X X  X X X
+X X X X  XoX  XX
+X X X oX Xoo XoX
+X X X oX XX  ooX
+X X X oX X  XoXX
+X X X X  X  oXXX
+X X X X X  XoX X
 X X X X X X  X X
-X X X X X X X XX
-X X X X   X    X
-X!X!X!XXXXXX XXX
+X X X X X X XoXX
+X X X X   Xooo>X
+X!X!X!XXXXXXoXXX
 XXXXXXXXXXXXXXXX
 1 12 / data/world3 41 26
 3 12 o data/turret4 1 2
@@ -23,3 +23,5 @@ XXXXXXXXXXXXXXXX
 3 1 o data/turret4 5 11
 5 1 o data/turret4 7 2
 7 1 o data/turret4 5 2
+9 1 o data/world3 24 14
+14 11 > 20

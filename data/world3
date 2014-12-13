@@ -18,7 +18,7 @@ World 3
  T       ~~XX         XXXXXXXXX           XX~~       T
 TT       ~~XX         X   !   X           XX~~       T
 !        ~~XX         X       X           XX~~       T
-TT       ~~XX                 X           XX~~       T
+TT       ~~XX         X   !   X           XX~~       T
  T       ~~XX         XXXXXXXXX         oooooooo     T
  T       ~~XX                             XX~~       T
  T       ~~XX                             XX~~       T
@@ -44,3 +44,4 @@ TT       ~~XX                 X           XX~~       T
 26 14 / data/throneRoom 2 1
 41 8 / data/turret3 2 1
 41 27 / data/turret4 1 11
+26 16 o data/world3 26 18

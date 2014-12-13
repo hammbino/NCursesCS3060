@@ -565,8 +565,13 @@ void Interact::battleBar(int points) {
   if (counter == 0) {
     war_win = newwin(barHeight, barWidth, warY, warX);
   }
-  int level = (barWidth/2 + points * 4);
-  barInfo[level] = '|';
+  int level = (barWidth/2 + (points * ((barWidth/6)/2)));
+  if (tugOfWarBar <= -6)
+    barInfo[0] = '|';
+  else if (tugOfWarBar > 5)
+    barInfo[barWidth-3] = '|';
+  else
+    barInfo[level] = '|';
   //string info = barInfo;
   mvwprintw(war_win, 1, 1, barInfo);
   box(war_win,0,0);

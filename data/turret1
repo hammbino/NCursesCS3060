@@ -23,8 +23,9 @@ XXXXXXXXXXXXXXXX
 3 8 o data/world3 14 8
 5 9 o data/world3 14 8
 10 3 o data/world3 14 8
-14 11 > 3
-14 9 > 2
 11 3 : 32 3
 
 WATCH YOUR STEP ON THESE TILES
+
+14 11 > 14
+14 9 > 15

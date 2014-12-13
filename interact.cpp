@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <time.h>
 
 using namespace std;
 
@@ -44,8 +45,8 @@ void Interact::getDecision(character* person) {
   getmaxyx(stdscr, winheight, winwidth);
 
   startx = (winwidth * .25);
-  starty = (winheight * .1);
-  character_win = newwin(winheight * .5, winwidth * .45, starty, startx);
+  starty = (winheight * .02);
+  character_win = newwin(winheight * .7, winwidth * .45, starty, startx);
   print_character(character_win, person);
 
   startx = (winwidth * .8);
@@ -69,12 +70,18 @@ void Interact::getDecision(character* person) {
       return;
     } else if (person->type == "Vendor") {
       // If a vendor, continue but without the dialogue
+    } else if (person->type == "Professor") {
+      mvwprintw(result_win,3,1, "Congratulations! Farwell!\n");
+      box(result_win,0,0);
+      wrefresh(result_win);
+      cin.get();
+      return;
     }
   }
   print_menu(menu_win, highlight);
 
   if (n_choices == 4) {
-    mvwprintw(result_win,1,1, "$%d\n", player->money);
+    mvwprintw(result_win,7,1, "$%d\n", player->money);
     mvwprintw(result_win,2,1, "Are you here to buy or waste my time?");
     box(result_win,0,0);
     wrefresh(result_win);
@@ -116,13 +123,11 @@ void Interact::getDecision(character* person) {
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
           wrefresh(result_win);
-          cin.get();
 	  bought = FALSE;
         } else if (choice == 4 && !bought) {
           mvwprintw(result_win,1,1, "Good luck winning without my help.           ");
           mvwprintw(result_win,2,1, "                                             ");
           mvwprintw(result_win,3,1, "                                             ");
-          cin.get();
           wrefresh(result_win);
         } 
       }
@@ -131,6 +136,7 @@ void Interact::getDecision(character* person) {
     wrefresh(result_win);
     cin.get();
   } else {
+    battleBar(tugOfWarBar);
     while(tugOfWarBar > -6 && tugOfWarBar < 6) {
       print_menu(menu_win, highlight);
       c = wgetch(menu_win);
@@ -170,14 +176,49 @@ void Interact::getDecision(character* person) {
       wrefresh(result_win);
     } else if (tugOfWarBar >= 6) {
       person->encounterDone++;
-      mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
-      int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
-      reward = reward * 35;
-      player->money = player->money + reward;
-      mvwprintw(result_win,3,1,"You won $%d.", reward); 
-      box(result_win,0,0);
-      cin.get();
-      wrefresh(result_win);
+      if (person->type == "Professor") { // final fight dialogue
+        mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
+        int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
+        reward = reward * 38;
+        player->money = player->money + reward;
+        mvwprintw(result_win,3,1,"You won $%d.", reward); 
+	box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+	mvwprintw(result_win,1,1, "[You] HA! I have defeated you in a fair fight!\n");
+        mvwprintw(result_win,2,1, "\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+        mvwprintw(result_win,1,1, "[Wright] Yes but did you learn anything along the way?\n");
+        mvwprintw(result_win,2,1, "\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+        mvwprintw(result_win,1,1, "[You] Wha...? This was all a test of my ooey gooey inner\n");
+        mvwprintw(result_win,2,1, "character stuff?\n");
+        mvwprintw(result_win,3,1, "\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+	mvwprintw(result_win,1,1, "[Wright] Indeed. Now that you have proven determination\n");
+        mvwprintw(result_win,2,1, "I can see that you will rise above any challenge given you.\n");
+        mvwprintw(result_win,3,1, "Congratulations! Farwell!\n");
+        box(result_win,0,0);
+        wrefresh(result_win);
+        cin.get();
+      } else {
+        mvwprintw(result_win,1,1,"You have beaten %s!\n\n", person->name.c_str());
+        int reward = person->rockGrade+person->paperGrade+person->scissorsGrade;
+        reward = reward * 38;
+        player->money = player->money + reward;
+        mvwprintw(result_win,3,1,"You won $%d.", reward); 
+        box(result_win,0,0);
+        cin.get();
+        wrefresh(result_win);
+	  }
     }
     battleBar(tugOfWarBar);
     tugOfWarBar = 0;
@@ -252,6 +293,8 @@ void Interact::fight(WINDOW *result_win, character* enemy, int choice) {
     box(result_win,0,0);
     wrefresh(result_win);
   } else { // enemy has all weapons choose random
+    int seed = static_cast<int>(time(0));
+    srand(seed);
     p2 = rand() % 3; // computer chooses
     if (p2 == 0) { // computer chose rock
     winner = (p1 - p2 + 3) % 3;
@@ -303,21 +346,21 @@ void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
   ownedWeapons[1] = player->paperName;
   ownedWeapons[2] = player->scissorsName;
   // output player money
-  mvwprintw(result_win,1,1, "$%d\n", player->money);
+  mvwprintw(result_win,7,1, "$%d\n", player->money);
   box(result_win,0,0);
   wrefresh(result_win);
   //check grade if weapon is weaker or equal dont allow them to buy
 
   // Compare items cost to the money the user has
   if (cost > player->money) {
-    mvwprintw(result_win,2,1, "Do I look like the charitable type to you?\n");
-    mvwprintw(result_win,3,1, "Don't come back without a bigger wallet.\n");
+    mvwprintw(result_win,1,1, "Do I look like the charitable type to you?\n");
+    mvwprintw(result_win,2,1, "Don't come back without a bigger wallet.\n");
     wrefresh(result_win);
   } else {
-    mvwprintw(result_win,2,1, "Excellent choice, that should help you beat\n");
-    mvwprintw(result_win,3,1, "the others.\n");
+    mvwprintw(result_win,1,1, "Excellent choice, that should help you beat\n");
+    mvwprintw(result_win,2,1, "the others.\n");
     player->money = player->money - cost;
-    mvwprintw(result_win,1,1, "$%d\n", player->money);
+    mvwprintw(result_win,7,1, "$%d\n", player->money);
     box(result_win,0,0);
     wrefresh(result_win);
     
@@ -336,6 +379,7 @@ void Interact::buy(WINDOW *result_win, character* merchant, int choice) {
     mvwprintw(result_win,4,1, "%d %s\n", player->rockGrade, player->rockName.c_str());
     mvwprintw(result_win,5,1, "%d %s\n", player->paperGrade, player->paperName.c_str());
     mvwprintw(result_win,6,1, "%d %s\n", player->scissorsGrade, player->scissorsName.c_str());
+    box(result_win,0,0);
     wrefresh(result_win);
   }
 }
@@ -359,7 +403,7 @@ void Interact::print_menu(WINDOW *menu_win, int highlight) {
 
 void Interact::print_results(WINDOW *result_win, character* person) {
   
-  mvwprintw(result_win,1,2,"You approach %s\n", person->name.c_str());
+  mvwprintw(result_win,1,1,"You approach %s\n", person->name.c_str());
   box(result_win,0,0);
   wrefresh(result_win);
 }
@@ -462,8 +506,8 @@ void Interact::firstFight(character* person) {
     wrefresh(result_win);
     cin.get();
     mvwprintw(result_win,1,1, "Lets practice your rock/paper/scissors skills\n");
-    mvwprintw(result_win,2,1, "\n");
-    mvwprintw(result_win,3,1, "\n");
+    mvwprintw(result_win,2,1, "Get the bar to the green end to win. \n");
+    mvwprintw(result_win,3,1, "If you guess right, your hit will be more effective.\n");
     box(result_win,0,0);
     wrefresh(result_win);
     cin.get();
@@ -489,6 +533,7 @@ void Interact::firstFight(character* person) {
   }
   print_menu(menu_win, highlight);
 
+  battleBar(tugOfWarBar);
   while(tugOfWarBar > -6 && tugOfWarBar < 6) {
     print_menu(menu_win, highlight);
     c = wgetch(menu_win);
@@ -526,8 +571,11 @@ void Interact::firstFight(character* person) {
     wrefresh(result_win);
   } else if (tugOfWarBar >= 6) {
     person->encounterDone++;
-    mvwprintw(result_win,1,1,"Great you are now ready to progress in your jorney\n\n");
-    mvwprintw(result_win,3,1,"Take this as a gift $100.\n\n");
+    mvwprintw(result_win,1,1,"As you can see even if you guess wrong,\n");
+    mvwprintw(result_win,2,1,"you can still win if you upgrade your weapons.\n");
+    mvwprintw(result_win,3,1,"You are now ready to progress in your journey. Good luck!\n");
+    mvwprintw(result_win,4,1,"Take this as a gift $100\n");
+    box(result_win,0,0);
     box(result_win,0,0);
     cin.get();
     wrefresh(result_win);
